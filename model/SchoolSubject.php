@@ -4,12 +4,10 @@ class SchoolSubject {
 
     private $id;
     private $subjectName;
-    private $teacher;
-    private $schoolClass;
 
-    function __construct($subjectName = "", array $schoolClass) {
+    function __construct($id, $subjectName = "") {
         $this->subjectName = $subjectName;
-        $this->schoolClass = $schoolClass;
+        $this->id = $id;
     }
 
     function getId() {
@@ -19,25 +17,4 @@ class SchoolSubject {
     function getSubjectName() {
         return $this->subjectName;
     }
-
-    function getTeacher() {
-        return $this->teacher;
-    }
-
-    function getSchoolClass() {
-        return $this->schoolClass;
-    }
-
-    function setSubjectName($subjectName) {
-        $this->subjectName = $subjectName;
-    }
-
-    function setTeacher($teacher) {
-        $this->teacher = $teacher;
-    }
-
-    function setSchoolClass($schoolClass) {
-        $this->schoolClass = $schoolClass;
-    }
-
 }

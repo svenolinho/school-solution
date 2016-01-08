@@ -1,7 +1,7 @@
 <?php
 
 include_once 'controller/Controller.php';
-include_once 'model/SchoolSubject.php';
+include_once 'model/SchoolClass.php';
 include_once 'lib/MySqlAdapter.php';
 include_once 'view/View.php';
 include_once 'view/klassen/ClassListView.php';

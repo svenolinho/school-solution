@@ -12,4 +12,9 @@ class Error {
         echo "<div class=\"alert alert-danger\" role=\"alert\">Diese Klasse kann nicht gelöscht werden. Bitte entfernen Sie zuerst alle Schüler aus der Klasse und wiederholen Sie den Vorgang.</div>";
         
     }
+    
+    public function displaySubjectDeleteError() {
+        echo "<div class=\"alert alert-danger\" role=\"alert\">Dieses Fach kann nicht gelöscht werden.</div>";
+        
+    }
 }

@@ -67,7 +67,8 @@ include_once 'config/config.php';
                     break;
 
                 case URI_FAECHER:
-                    echo "Fächer";
+                    include_once 'controller/SchoolSubjectController.php';
+                    $controller = new SchoolSubjectController();
                     break;
                 
                 case URI_PRUEFUNGEN:

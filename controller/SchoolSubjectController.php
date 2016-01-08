@@ -1,7 +1,7 @@
 <?php
 
 include_once 'controller/Controller.php';
-include_once 'model/SchoolClass.php';
+include_once 'model/SchoolSubject.php';
 include_once 'lib/MySqlAdapter.php';
 include_once 'view/View.php';
 include_once 'view/faecher/SchoolSubjectView.php';
@@ -15,7 +15,7 @@ class SchoolSubjectController extends Controller {
     }
 
     protected function create() {
-        $subjectName = $_POST['schoolSubject'];
+        $subjectName = $_POST['schoolsubject'];
         $this->mysqlAdapter->addSchoolSubject($subjectName);
         $this->index();
     }
@@ -27,9 +27,9 @@ class SchoolSubjectController extends Controller {
     }
 
     protected function edit() {
-        $id = $_POST['schoolSubject-id'];
-        $subjectName = $_POST['schoolSubject'];
-        $this->mysqlAdapter->editSchoolclass($id, $subjectName);
+        $id = $_POST['schoolsubject-id'];
+        $subjectName = $_POST['schoolsubject'];
+        $this->mysqlAdapter->editSchoolSubject($id, $subjectName);
         $this->index();
     }
 

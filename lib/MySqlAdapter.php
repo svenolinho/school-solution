@@ -1,5 +1,7 @@
 <?php
+
 include_once 'view/Error.php';
+
 /**
  * Description of MySqlAdapter
  *
@@ -134,9 +136,44 @@ class MySqlAdapter {
             echo "Error: <br>" . mysqli_error($this->con);
         }
     }
-    
-    public function addSchoolSubject($subjectName){
-        
-        
+
+    public function addSchoolSubject($subjectName) {
+        $stmt = $this->con->prepare("INSERT INTO fach (FACH_name) VALUES (?)");
+        $stmt->bind_param("s", $subjectName);
+
+        if ($stmt->execute()) {
+            
+        } else {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
     }
+
+    public function editSchoolSubject($id, $subjectName) {
+        $stmt = $this->con->prepare("UPDATE fach SET FACH_name = ? WHERE PK_Fachnr=?");
+        $stmt->bind_param("ss", $subjectName, $id);
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
+    }
+
+    public function deleteSchoolSubject($id) {
+        $stmt = $this->con->prepare("DELETE FROM fach WHERE PK_Fachnr=?;");
+        $stmt->bind_param("s", $id);
+        if (!$stmt->execute()) {
+            $error = new Error();
+            $error->displaySubjectDeleteError();
+        }
+    }
+    
+    public function getSchoolSubjects() {
+        $schoolSubjects = array();
+        $res = $this->con->query("SELECT * FROM fach ORDER BY FACH_name");
+        while ($row = $res->fetch_assoc()) {
+            $subject = new SchoolSubject($row['PK_Fachnr'], $row['FACH_name']);
+            $schoolSubjects[] = $subject;
+        }
+        $res->free();
+        return $schoolSubjects;
+    }
+
 }
