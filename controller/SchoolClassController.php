@@ -1,7 +1,11 @@
 <?php
+
 include_once 'controller/Controller.php';
-include_once 'model/SchoolClass.php';
+include_once 'model/SchoolSubject.php';
 include_once 'lib/MySqlAdapter.php';
+include_once 'view/View.php';
+include_once 'view/klassen/ClassListView.php';
+include_once 'view/klassen/ShowStudentsFromClass.php';
 
 class SchoolClassController extends Controller {
 
@@ -13,87 +17,40 @@ class SchoolClassController extends Controller {
 
     protected function index() {
         $classList = $this->mysqlAdapter->getSchoolclasses();
-        ?>
-        <div class = "row">
-            <div class = "col-md-4">
-                <div class = "panel panel-default">
-                    <div class = "panel-heading">
-                        <h5>Klassen<a href="<?php echo URI_KLASSEN ?>/new-class" class="btn"><span class="glyphicon glyphicon-plus"></span></a></h5> 
-                    </div>
-
-
-
-                    <table class = "table table-condensed">
-                        <tbody>
-                            <?php
-                            foreach ($classList as $class) {
-                                $id = $class->getId();
-                                $urlClass = URI_KLASSEN . "/{$id}-" . self::encodeUrl("{$class->getName()}");
-                                $urlDelete = URI_KLASSEN . "/delete";
-                                echo "<tr>";
-                                echo "<td><a href=\"$urlClass\" class=\"list-group-item\">{$class->getName()}</a></td>";
-                                echo "<td><a href=\"$urlDelete?id=$id\"  class=\"btn btn-danger\" role=\"button\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>";
-                                echo "</tr>";
-                            }
-                            ?>                                                              
-                        </tbody>
-                    </table>
-
-
-
-                </div>
-            </div>
-        </div>
-        <?php
+        $view = new ClassListView();
+        $view->assign1('list', $classList);
+        $view->display();
     }
 
     protected function init() {
-        include_once 'view/schoolclassForm.php';
+        
     }
 
     protected function show() {
-        $classList = $this->mysqlAdapter->getSchoolclasses();
-        echo <<<TEST
-                <div class="col-md-9">
-                <table class = "table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Last Name</th>
-                        <th>First Name</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                        <th>Class</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>                
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>           
-                    </tr>
-                </tbody>
-                </table>
-                </div>                    
-TEST;
-        foreach ($classList as $class) {
-            
-        }
+        $id = $_GET['id'];
+        $studentslist = $this->mysqlAdapter->getStudentsFromClass($id);
+        $view = new ShowStudentsFromClass();
+        $view->assign1('list', $studentslist);
+        $view->display();
     }
 
     protected function create() {
-        $value = $_POST['class_name'];
-        $this->mysqlAdapter->addSchoolclass($value);
+        $classname = $_POST['schoolclass'];
+        $this->mysqlAdapter->addSchoolclass($classname);
+        $this->index();
     }
 
     protected function delete() {
         $id = $_GET['id'];
-        $classList = $this->mysqlAdapter->deleteClass($id);
+        $this->mysqlAdapter->deleteClass($id);
+        $this->index();
     }
 
     protected function edit() {
-        
+        $id = $_POST['schoolclass-id'];
+        $classname = $_POST['schoolclass'];
+        $this->mysqlAdapter->editSchoolclass($id, $classname);
+        $this->index();
     }
 
 }

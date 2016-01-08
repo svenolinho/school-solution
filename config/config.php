@@ -2,10 +2,11 @@
 
 # URIs
 define('URI_HOME', '/home');
-define('URI_KLASSEN', '/klassen');
-define('URI_STUDENTEN', '/studenten');
-define('URI_NOTEN', '/noten');
-define('URI_AUSWERTUNG', '/auswertung');
+define('URI_KLASSEN', '/classes');
+define('URI_STUDENTEN', '/students');
+define('URI_FAECHER', '/school-subject');
+define('URI_PRUEFUNGEN', '/exams');
+define('URI_AUSWERTUNG', '/evaluation');
 
 
 # DB configs

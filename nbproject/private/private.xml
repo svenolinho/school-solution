@@ -7,10 +7,6 @@
             <file>file:/C:/Domains/school-solution/htdocs/controller/StudentController.php</file>
             <file>file:/C:/Domains/school-solution/htdocs/lib/MySqlAdapter.php</file>
         </group>
-        <group>
-            <file>file:/C:/Domains/school-solution/htdocs/controller/Controller.php</file>
-            <file>file:/C:/Domains/school-solution/htdocs/controller/StudentController.php</file>
-            <file>file:/C:/Domains/school-solution/htdocs/lib/MySqlAdapter.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

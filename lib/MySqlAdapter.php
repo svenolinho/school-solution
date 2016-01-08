@@ -1,5 +1,5 @@
 <?php
-
+include_once 'view/Error.php';
 /**
  * Description of MySqlAdapter
  *
@@ -45,7 +45,7 @@ class MySqlAdapter {
 
     public function getSchoolclasses() {
         $schoolClassList = array();
-        $res = $this->con->query("SELECT * FROM klasse ORDER BY PK_Klassenr");
+        $res = $this->con->query("SELECT * FROM klasse ORDER BY KLA_name");
         while ($row = $res->fetch_assoc()) {
             $class = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
             $schoolClassList[] = $class;
@@ -55,21 +55,21 @@ class MySqlAdapter {
     }
 
     public function addSchoolclass($classname) {
-        $sqli = "INSERT INTO klasse (KLA_name) VALUES ('{$classname}')";
 
+        $stmt = $this->con->prepare("INSERT INTO klasse (KLA_name) VALUES (?)");
+        $stmt->bind_param("s", $classname);
 
-        if (mysqli_query($this->con, $sqli)) {
-            echo "Ihre Daten wurden erfolgreich erfasst.<br>";
-            echo "<a href='URI_VERWALTUNG' class=\"btn btn-default\" role=\"button\">Zurück</a>";
+        if ($stmt->execute()) {
+            
         } else {
-            echo "Error: " . $sqli . "<br>" . mysqli_error($this->con);
+            echo "Error: <br>" . mysqli_error($this->con);
         }
     }
 
     public function getStudents() {
         include_once 'model/SchoolClass.php';
         $list = array();
-        $res = $this->con->query("SELECT * FROM student LEFT JOIN klasse ON student.STU_klasse=klasse.PK_Klassenr");
+        $res = $this->con->query("SELECT * FROM student LEFT JOIN klasse ON student.STU_klasse=klasse.PK_Klassenr ORDER BY STU_name");
         while ($row = $res->fetch_assoc()) {
             $klasse = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
             $student = new Student($row['PK_Studnr'], $row['STU_name'], $row['STU_vorname'], $row['STU_mail'], $row['STU_telnr'], $row['STU_notiz'], $klasse);
@@ -79,14 +79,14 @@ class MySqlAdapter {
         return $list;
     }
 
-    public function addStudent($firstName, $lastName, $email, $phone) {
-        $sqli = "INSERT INTO student (STU_vorname,STU_name,STU_mail,STU_telnr) VALUES ('{$firstName}','{$lastName}','{$email}','{$phone}')";
+    public function addStudent($firstName, $lastName, $email, $phone, $klasse = NULL) {
+        $stmt = $this->con->prepare("INSERT INTO student (STU_vorname,STU_name,STU_mail,STU_telnr,STU_klasse) VALUES (?,?,?,?,?)");
+        $stmt->bind_param("ssssi", $firstName, $lastName, $email, $phone, $klasse);
 
-        if (mysqli_query($this->con, $sqli)) {
-            echo "Ihre Daten wurden erfolgreich erfasst.<br>";
-            echo "<a href='URI_VERWALTUNG' class=\"btn btn-default\" role=\"button\">Zurück</a>";
+        if ($stmt->execute()) {
+            
         } else {
-            echo "Error: " . $sqli . "<br>" . mysqli_error($this->con);
+            echo "Error: <br>" . mysqli_error($this->con);
         }
     }
 
@@ -94,7 +94,8 @@ class MySqlAdapter {
         $stmt = $this->con->prepare("DELETE FROM klasse WHERE PK_Klassenr=?;");
         $stmt->bind_param("s", $id);
         if (!$stmt->execute()) {
-            echo "Error: <br>" . mysqli_error($this->con);
+            $error = new Error();
+            $error->displayClassDeleteError();
         }
     }
 
@@ -106,12 +107,36 @@ class MySqlAdapter {
         }
     }
 
-    public function editStudent($id, $first_name, $lastname, $email, $phone) {
-        $stmt = $this->con->prepare("UPDATE student SET STU_name = ?, STU_vorname = ?, STU_mail = ?, STU_telnr = ? WHERE PK_Studnr = ?");
-        $stmt->bind_param("sssii", $first_name,$lastname,$email,$phone,$id);
+    public function editStudent($id, $firstname, $lastname, $email, $phone, $klasse = NULL) {
+        $stmt = $this->con->prepare("UPDATE student SET STU_name = ?, STU_vorname = ?, STU_mail = ?, STU_telnr = ?, STU_klasse = ? WHERE PK_Studnr = ?");
+        $stmt->bind_param("sssssi", $lastname, $firstname, $email, $phone, $klasse, $id);
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }
     }
 
+    public function getStudentsFromClass($id) {
+        include_once 'model/Student.php';
+        $studentslist = array();
+        $res = $this->con->query("SELECT * FROM student WHERE STU_klasse =$id");
+        while ($row = $res->fetch_assoc()) {
+            $student = new Student($row['PK_Studnr'], $row['STU_name'], $row['STU_vorname'], $row['STU_mail'], $row['STU_telnr'], $row['STU_notiz']);
+            $studentslist[] = $student;
+        }
+        $res->free();
+        return $studentslist;
+    }
+
+    public function editSchoolclass($id, $classname) {
+        $stmt = $this->con->prepare("UPDATE klasse SET KLA_name = ? WHERE PK_Klassenr=?");
+        $stmt->bind_param("ss", $classname, $id);
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
+    }
+    
+    public function addSchoolSubject($subjectName){
+        
+        
+    }
 }

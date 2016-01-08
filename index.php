@@ -36,7 +36,6 @@ include_once 'config/config.php';
         <!-- Navigation -->
         <nav class="navbar navbar-default" role="navigation">
             <div class="container">
-
                 <ul class="nav navbar-nav">
                     <?php
                     $currentUri = getCurrentURI();
@@ -45,14 +44,6 @@ include_once 'config/config.php';
                     }
                     ?>
                 </ul>
-
-                <form class="navbar-form navbar-right" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search...">
-                    </div>
-                    <button type="submit" class="btn btn-default">Go</button>
-                </form>
-
             </div>
         </nav>
 
@@ -60,10 +51,9 @@ include_once 'config/config.php';
         <div class="container">
             <?php
             $controller = null;
-            $controller = null;
             switch (getCurrentURI()) {
                 case URI_HOME:
-                    echo "home";
+                    include_once 'view/home/bedienungsanleitung.php';
                     break;
 
                 case URI_KLASSEN:
@@ -76,15 +66,16 @@ include_once 'config/config.php';
                     $controller = new StudentController();
                     break;
 
-                case URI_NOTEN:
+                case URI_FAECHER:
+                    echo "Fächer";
+                    break;
+                
+                case URI_PRUEFUNGEN:
+                    echo "Prüfungen";
                     break;
 
                 case URI_AUSWERTUNG:
                     echo "auswertung";
-                    break;
-
-                case URI_HILFE:
-                    echo "hilfe";
                     break;
             }
             if ($controller != null) {
@@ -113,7 +104,8 @@ function getMenu() {
         URI_HOME => 'Home',
         URI_KLASSEN => 'Klassen',
         URI_STUDENTEN => 'Studenten',
-        URI_NOTEN => 'Noten',
+        URI_FAECHER => 'Fächer',
+        URI_PRUEFUNGEN => 'Prüfungen',
         URI_AUSWERTUNG => 'Auswertung',
     );
 }

@@ -11,7 +11,7 @@ class Student {
     public $schoolClass;
 
 //    Zwingende Parameter nicht initialisieren
-    function __construct($id = 0, $lastName = "", $firstName = "", $email = "", $phone = "",$note = "", $schoolClass = NULL) {
+    function __construct($id = 0, $lastName = "", $firstName = "", $email = "", $phone = "", $note = "", $schoolClass = NULL) {
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -54,6 +54,14 @@ class Student {
             return "";
         } else {
             return $this->schoolClass->getName();
+        }
+    }
+
+    function getSchoolClassId() {
+        if ($this->schoolClass == NULL) {
+            return "";
+        } else {
+            return $this->schoolClass->getId();
         }
     }
 

@@ -1,13 +1,13 @@
 <?php
 
-class Subject {
+class SchoolSubject {
 
     private $id;
     private $subjectName;
     private $teacher;
     private $schoolClass;
 
-    function __construct($subjectName = "",array $schoolClass) {
+    function __construct($subjectName = "", array $schoolClass) {
         $this->subjectName = $subjectName;
         $this->schoolClass = $schoolClass;
     }
