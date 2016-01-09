@@ -35,8 +35,8 @@ class SchoolSubjectView extends View {
         echo "<td><input type=\"text\" class=\"form-control\" name=\"schoolsubject\">";
         echo "<input type=\"hidden\" name=\"schoolsubject-id\">";
         echo "</td>";
-        echo "<td><a class=\"btn btn-danger\" data-toggle=\"schoolsubject-abort\"><span class=\"glyphicon glyphicon-remove\"></td>";
-        echo "<td><a class=\"btn btn-primary\" data-toggle=\"schoolsubject-submit\"><span class=\"glyphicon glyphicon-ok\"></span></td>";
+        echo "<td><a class=\"btn btn-danger\" data-toggle=\"schoolsubject-abort\"><span class=\"glyphicon glyphicon-remove\"></span></a></td>";
+        echo "<td><a class=\"btn btn-primary\" data-toggle=\"schoolsubject-submit\"><span class=\"glyphicon glyphicon-ok\"></span></a></td>";
         echo "</tr>";
 
         echo "</tbody>";

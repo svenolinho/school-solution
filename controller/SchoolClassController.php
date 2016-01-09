@@ -37,20 +37,20 @@ class SchoolClassController extends Controller {
     protected function create() {
         $classname = $_POST['schoolclass'];
         $this->mysqlAdapter->addSchoolclass($classname);
-        $this->index();
+        header("Location: ".URI_KLASSEN);
     }
 
     protected function delete() {
         $id = $_GET['id'];
         $this->mysqlAdapter->deleteClass($id);
-        $this->index();
+        header("Location: ".URI_KLASSEN);
     }
 
     protected function edit() {
         $id = $_POST['schoolclass-id'];
         $classname = $_POST['schoolclass'];
         $this->mysqlAdapter->editSchoolclass($id, $classname);
-        $this->index();
+        header("Location: ".URI_KLASSEN);
     }
 
 }

@@ -17,20 +17,20 @@ class SchoolSubjectController extends Controller {
     protected function create() {
         $subjectName = $_POST['schoolsubject'];
         $this->mysqlAdapter->addSchoolSubject($subjectName);
-        $this->index();
+        header("Location: ".URI_FAECHER);
     }
 
     protected function delete() {
         $id = $_GET['id'];
         $this->mysqlAdapter->deleteSchoolSubject($id);
-        $this->index();
+        header("Location: ".URI_FAECHER);
     }
 
     protected function edit() {
         $id = $_POST['schoolsubject-id'];
         $subjectName = $_POST['schoolsubject'];
         $this->mysqlAdapter->editSchoolSubject($id, $subjectName);
-        $this->index();
+        header("Location: ".URI_FAECHER);
     }
 
     protected function index() {

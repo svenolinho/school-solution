@@ -158,7 +158,7 @@ class MySqlAdapter {
 
     public function deleteSchoolSubject($id) {
         $stmt = $this->con->prepare("DELETE FROM fach WHERE PK_Fachnr=?;");
-        $stmt->bind_param("s", $id);
+        $stmt->bind_param("i", $id);
         if (!$stmt->execute()) {
             $error = new Error();
             $error->displaySubjectDeleteError();
@@ -174,6 +174,47 @@ class MySqlAdapter {
         }
         $res->free();
         return $schoolSubjects;
+    }
+    
+    public function addExam($subject, $schoolClass, $clef, $date, $maxScore) {
+        $stmt = $this->con->prepare("INSERT INTO pruefungen (PRUEF_fach,PRUEF_klasse,PRUEF_notenschluessel,PRUEF_datum,PRUEF_maxPunktzahl) VALUES (?,?,?,?,?)");
+        $stmt->bind_param("iissd", $subject, $schoolClass, $clef, $date, $maxScore);
+
+        if ($stmt->execute()) {
+            
+        } else {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
+    }
+
+    public function getExams() {
+        $exams = array();
+        $res = $this->con->query("SELECT * FROM pruefungen LEFT JOIN fach ON PRUEF_fach = fach.PK_Fachnr LEFT JOIN klasse ON PRUEF_klasse = klasse.PK_Klassenr ORDER BY PRUEF_datum");
+        while ($row = $res->fetch_assoc()) {
+            $subject = new SchoolSubject($row['PK_Fachnr'], $row['FACH_name']);
+            $class = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
+            $exam = new Exam($row['PK_Pruefnr'], $subject,$class,$row['PRUEF_notenschluessel'],$row['PRUEF_datum'],$row['PRUEF_maxpunktzahl']);
+            $exams[] = $exam;
+        }
+        $res->free();
+        return $exams;
+    }
+
+    public function deleteExam($id) {
+        $stmt = $this->con->prepare("DELETE FROM pruefungen WHERE PK_Pruefnr=?;");
+        $stmt->bind_param("i", $id);
+        if (!$stmt->execute()) {
+            $error = new Error();
+            $error->displaySubjectDeleteError();
+        }
+    }
+
+    public function editExam($id, $subject, $schoolClass, $clef, $date, $maxScore) {
+        $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_fach = ?,PRUEF_klasse = ?,PRUEF_notenschluessel = ?,PRUEF_datum = ?, PRUEF_maxPunkzahl = ? WHERE PK_Pruefnr=?");
+        $stmt->bind_param("iissdi", $subject, $schoolClass, $clef, $date, $maxScore);
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
     }
 
 }

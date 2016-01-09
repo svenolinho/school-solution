@@ -24,7 +24,7 @@ class StudentController extends Controller {
             $klasse = NULL;
         }
         $this->mysqlAdapter->addStudent($firstName, $lastName, $email, $phone, $klasse);
-        $this->index();
+        header("Location: ".URI_STUDENTEN);
     }
 
     protected function index() {
@@ -48,7 +48,7 @@ class StudentController extends Controller {
     protected function delete() {
         $id = $_GET['id'];
         $this->mysqlAdapter->deleteStudent($id);
-        $this->index();
+        header("Location: ".URI_STUDENTEN);
     }
 
     protected function edit() {
@@ -62,7 +62,7 @@ class StudentController extends Controller {
             $klasse = NULL;
         }
         $this->mysqlAdapter->editStudent($id, $firstname, $lastname, $email, $phone, $klasse);
-        $this->index();
+        header("Location: ".URI_STUDENTEN);
     }
 
 }

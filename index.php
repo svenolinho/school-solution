@@ -72,7 +72,8 @@ include_once 'config/config.php';
                     break;
                 
                 case URI_PRUEFUNGEN:
-                    echo "Prüfungen";
+                    include_once 'controller/ExamController.php';
+                    $controller = new ExamController();
                     break;
 
                 case URI_AUSWERTUNG:

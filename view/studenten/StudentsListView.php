@@ -54,12 +54,12 @@ class StudentsListView extends View {
             echo "</tr>";
         }
         echo "<tr data-student-row style=\"display:none\">";
-        echo "<td><input type=\"text\" name=\"firstname\"></td>";
-        echo "<td><input type=\"text\" name=\"lastname\"></td>";
-        echo "<td><input type=\"text\" name=\"email\"></td>";
-        echo "<td><input type=\"text\" name=\"phone\"></td>";
+        echo "<td><input type=\"text\" name=\"firstname\" class=\"form-control\"></td>";
+        echo "<td><input type=\"text\" name=\"lastname\" class=\"form-control\"></td>";
+        echo "<td><input type=\"text\" name=\"email\" class=\"form-control\"></td>";
+        echo "<td><input type=\"text\" name=\"phone\" class=\"form-control\"></td>";
         echo "<td>";
-        echo "<select name=\"klasse\">";
+        echo "<select name=\"klasse\" class=\"form-control\">";
         echo "<option>--Keine--</option>";
         foreach ($this->vars['classList'] as $klasse) {
             echo "<option value=\"" . $klasse->getId() . "\">" . $klasse->getName() . "</option>";
