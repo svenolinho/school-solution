@@ -36,6 +36,8 @@ class StudentsListView extends View {
             $name = $student->getFirstName();
             $fullname = $name . "-" . $student->getLastName();
             $urlDelete = URI_STUDENTEN . "/delete-" . $fullname;
+            $urlNote = URI_STUDENTEN . "/notes-" . $student->getFirstName() . "_" . $student->getLastName();
+            
             echo "<tr data-toggle=\"student-row\" data-student-id=\"$id\">";
             echo "<td data-id=\"firstname\">{$student->getFirstName()}</td>";
             echo "<td data-id=\"lastname\">{$student->getLastName()}</td>";
@@ -49,7 +51,7 @@ class StudentsListView extends View {
             echo "<a class=\"btn btn-primary\" role=\"button\" data-toggle=\"student-start-edit\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Bearbeiten\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
             echo "</td>";
             echo "<td>";
-            echo "<a class=\"btn btn-warning\" role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
+            echo "<a href=\"$urlNote?id=$id\" class=\"btn btn-warning\" {$student->getFirstName()} role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
             echo "</td>";
             echo "</tr>";
         }

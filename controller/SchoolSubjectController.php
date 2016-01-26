@@ -5,6 +5,7 @@ include_once 'model/SchoolSubject.php';
 include_once 'lib/MySqlAdapter.php';
 include_once 'view/View.php';
 include_once 'view/faecher/SchoolSubjectView.php';
+include_once 'view/faecher/ShowExamsFromSubject.php';
 
 class SchoolSubjectController extends Controller {
 
@@ -45,6 +46,14 @@ class SchoolSubjectController extends Controller {
     }
 
     protected function show() {
+        $id = $_GET['id'];
+        $examlist = $this->mysqlAdapter->getExamsFromSubjects($id);
+        $view = new ShowExamsFromSubject();
+        $view->assign1('list', $examlist);
+        $view->display();
+    }
+
+    protected function showNotes() {
         
     }
 

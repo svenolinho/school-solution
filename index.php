@@ -23,6 +23,8 @@ include_once 'config/config.php';
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 
+        
+
     </head>
 
     <body>
@@ -70,14 +72,15 @@ include_once 'config/config.php';
                     include_once 'controller/SchoolSubjectController.php';
                     $controller = new SchoolSubjectController();
                     break;
-                
+
                 case URI_PRUEFUNGEN:
                     include_once 'controller/ExamController.php';
                     $controller = new ExamController();
                     break;
 
                 case URI_AUSWERTUNG:
-                    echo "auswertung";
+                    include_once 'controller/EvaluationController.php';
+                    $controller = new EvaluationController();
                     break;
             }
             if ($controller != null) {

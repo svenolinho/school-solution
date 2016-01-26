@@ -11,7 +11,7 @@ class ClassListView extends View {
 
         $url = URI_KLASSEN;
 
-        echo "<div class=\"col-md-4\">";
+        echo "<div class=\"col-md-6\">";
         echo "<div class=\"panel panel-default\">";
         echo "<div class=\"panel-heading\">";
         echo "<h4>Klassen<a data-toggle =\"schoolclass-start-new\" class=\"btn\"><span class=\"glyphicon glyphicon-plus\"></span></a></h5>";
@@ -24,6 +24,7 @@ class ClassListView extends View {
             $id = $class->getId();
             $urlClass = URI_KLASSEN . "/show-" . $class->getName();
             $urlDelete = URI_KLASSEN . "/delete-" . $class->getName();
+            $urlNote = URI_KLASSEN . "/notes-" . $class->getName();
 
             echo "<tr data-toggle=\"schoolclass-row\" data-schoolclass-id=\"$id\">";
             echo "<td data-id=\"schoolclass\"><a href=\"$urlClass?id=$id\" class=\"list-group-item\">{$class->getName()}</a></td>";
@@ -34,7 +35,7 @@ class ClassListView extends View {
             echo "<a class=\"btn btn-primary\" role=\"button\" data-toggle=\"schoolclass-start-edit\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Bearbeiten\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
             echo "</td>";
             echo "<td>";
-            echo "<a class=\"btn btn-warning\" role=\"button\" data-toggle=\"schoolclass-note\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
+            echo "<a href=\"$urlNote?id=$id\" class=\"btn btn-warning\" {$class->getName()} role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
             echo "</td>";
             echo "</tr>";
         }

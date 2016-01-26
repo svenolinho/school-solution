@@ -5,6 +5,7 @@ include_once 'model/Student.php';
 include_once 'lib/MySqlAdapter.php';
 include_once 'view/View.php';
 include_once 'view/studenten/StudentsListView.php';
+include_once 'view/studenten/ShowStudentsNotes.php';
 
 class StudentController extends Controller {
 
@@ -24,7 +25,7 @@ class StudentController extends Controller {
             $klasse = NULL;
         }
         $this->mysqlAdapter->addStudent($firstName, $lastName, $email, $phone, $klasse);
-        header("Location: ".URI_STUDENTEN);
+        header("Location: " . URI_STUDENTEN);
     }
 
     protected function index() {
@@ -45,10 +46,19 @@ class StudentController extends Controller {
         
     }
 
+    protected function showNotes() {
+
+        $id = $_GET['id'];
+        $notes = $this->mysqlAdapter->getStudent($id);
+        $view = new ShowStudentsNotes();
+        $view->assign1('notes', $notes);
+        $view->display();
+    }
+
     protected function delete() {
         $id = $_GET['id'];
         $this->mysqlAdapter->deleteStudent($id);
-        header("Location: ".URI_STUDENTEN);
+        header("Location: " . URI_STUDENTEN);
     }
 
     protected function edit() {
@@ -58,11 +68,14 @@ class StudentController extends Controller {
         $email = $_POST['email'];
         $phone = $_POST['phone'];
         $klasse = $_POST['klasse'];
+        $note = $_POST['note'];
         if (!is_numeric($klasse)) {
             $klasse = NULL;
         }
-        $this->mysqlAdapter->editStudent($id, $firstname, $lastname, $email, $phone, $klasse);
-        header("Location: ".URI_STUDENTEN);
+
+
+        $this->mysqlAdapter->editStudent($id, $firstname, $lastname, $email, $phone, $klasse, $note);
+        header("Location: " . URI_STUDENTEN);
     }
 
 }

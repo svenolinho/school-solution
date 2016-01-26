@@ -24,6 +24,12 @@ abstract class Controller {
     /**
      * creates a new empty instance of the resource 
      */
+    abstract protected function showNotes();
+
+    /**
+     * creates a new empty instance of the resource 
+     */
+    
     abstract protected function init();
 
     /**
@@ -41,6 +47,8 @@ abstract class Controller {
                 $matches = array();
                 if (preg_match("@^.*/show@", $_SERVER['REQUEST_URI'])) {
                     $this->show();
+                } elseif (preg_match("@^.*/notes@", $_SERVER['REQUEST_URI'])) {
+                    $this->showNotes();
                 } elseif (preg_match("@^.*/new@", $_SERVER['REQUEST_URI'])) {
                     $this->create();
                 } elseif (preg_match("@^.*/delete@", $_SERVER['REQUEST_URI'])) {

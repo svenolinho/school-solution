@@ -9,7 +9,6 @@ class ShowStudentsFromClass extends View {
 
     public function display() {
 
-        
         echo "<table class=\"table table-condensed\">";
         echo "<thead>";
         echo "<tr>";
@@ -20,12 +19,18 @@ class ShowStudentsFromClass extends View {
         echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
-        foreach ($this->vars['list'] as $student) {
+        foreach ($this->vars['list'] as $student) { 
+            $id = $student->getId();
+            $urlNote = URI_STUDENTEN . "/notes-" . $student->getFirstName() . "_" . $student->getLastName();
+            
             echo "<tr>";
             echo "<td>{$student->getFirstName()}</td>";
             echo "<td>{$student->getLastName()}</td>";
             echo "<td>{$student->getEmail()}</td>";
             echo "<td>{$student->getPhone()}</td>";
+            echo "<td>";
+            echo "<a href=\"$urlNote?id=$id\" class=\"btn btn-warning\" {$student->getFirstName()} role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
+            echo "</td>";
             echo "</tr>";
         }
         echo "</tbody>";

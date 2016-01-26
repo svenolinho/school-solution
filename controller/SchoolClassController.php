@@ -6,6 +6,7 @@ include_once 'lib/MySqlAdapter.php';
 include_once 'view/View.php';
 include_once 'view/klassen/ClassListView.php';
 include_once 'view/klassen/ShowStudentsFromClass.php';
+include_once 'view/klassen/ShowSchoolClassNotes.php';
 
 class SchoolClassController extends Controller {
 
@@ -37,20 +38,33 @@ class SchoolClassController extends Controller {
     protected function create() {
         $classname = $_POST['schoolclass'];
         $this->mysqlAdapter->addSchoolclass($classname);
-        header("Location: ".URI_KLASSEN);
+        header("Location: " . URI_KLASSEN);
     }
 
     protected function delete() {
         $id = $_GET['id'];
-        $this->mysqlAdapter->deleteClass($id);
-        header("Location: ".URI_KLASSEN);
+        if($this->mysqlAdapter->deleteClass($id)){
+            header("Location: " . URI_KLASSEN);
+        }else{
+            $error = $this->mysqlAdapter->getError();
+        }
     }
 
     protected function edit() {
         $id = $_POST['schoolclass-id'];
         $classname = $_POST['schoolclass'];
-        $this->mysqlAdapter->editSchoolclass($id, $classname);
-        header("Location: ".URI_KLASSEN);
+        $note = $_POST['note'];
+        $this->mysqlAdapter->editSchoolclass($id, $classname, $note);
+        header("Location: " . URI_KLASSEN);
+    }
+
+    protected function showNotes() {
+
+        $id = $_GET['id'];
+        $notes = $this->mysqlAdapter->getSchoolClass($id);
+        $view = new ShowSchoolClassNotes();
+        $view->assign1('notes', $notes);
+        $view->display();
     }
 
 }

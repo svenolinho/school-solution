@@ -11,7 +11,8 @@ class ExamView extends View {
         echo "<div class=\"col-md-10\">";
         echo "<div class=\"panel panel-default\">";
         echo "<div class=\"panel-heading\">";
-        echo "<h4>Pr&uuml;fungen<a data-toggle=\"modal\" data-target=\"#newExam\" class=\"btn\"><span class=\"glyphicon glyphicon-plus\"></span></a></h5>";
+        echo "<h4>Pr&uuml;fungen<a data-toggle=\"modal\" data-target=\"#newExam\" class=\"btn\"><span class=\"glyphicon glyphicon-plus\"></span></a>";
+        echo "<a href=\"#\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-arrow-down\"></span> Klasse wählen</a></h5>";
         echo "</div>";
         echo "<table class=\"table table-condensed\" data-toggle=\"schoolexam-table\">";
         echo <<<THEAD
@@ -28,6 +29,7 @@ THEAD;
             $id = $exam->getId();
             $urlClass = URI_PRUEFUNGEN . "/show-" . $exam->getId();
             $urlDelete = URI_PRUEFUNGEN . "/delete-" . $exam->getId();
+            $urlNote = URI_PRUEFUNGEN . "/notes-" . $exam->getDate();
 
             echo "<tr data-toggle=\"schoolexam-row\" data-schoolexam-id=\"$id\">";
             echo "<td data-id=\"schoolexam\"><a href=\"$urlClass?id=$id\" class=\"list-group-item\">{$exam->getDate()}</a></td>";
@@ -39,6 +41,9 @@ THEAD;
             echo "<td>";
             echo "<a class=\"btn btn-primary\" role=\"button\" data-toggle=\"schoolexam-start-edit\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Bearbeiten\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
             echo "</td>";
+            echo "<td>";
+            echo "<a href=\"$urlNote?id=$id\" class=\"btn btn-warning\" {$exam->getDate()} role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
+            echo "</td>";
             echo "</tr>";
         }
         echo "</tbody>";
@@ -46,17 +51,17 @@ THEAD;
         echo "</div>";
         echo "</div>";
         echo "<script src=\"/js/schoolexam-form.js\" type=\"text/javascript\"></script>";
-        
+
         $schoolClassOptionHtml = "";
-        foreach ($this->vars['schoolClassList'] as $class){
-           $schoolClassOptionHtml.="<option value=\"{$class->getId()}\">{$class->getName()}</option>)";         
+        foreach ($this->vars['schoolClassList'] as $class) {
+            $schoolClassOptionHtml.="<option value=\"{$class->getId()}\">{$class->getName()}</option>)";
         }
-        
+
         $schoolSubjectOptionHtml = "";
-        foreach ($this->vars['schoolSubjectList'] as $subject){
-           $schoolSubjectOptionHtml.="<option value=\"{$subject->getId()}\">{$subject->getSubjectName()}</option>)";         
+        foreach ($this->vars['schoolSubjectList'] as $subject) {
+            $schoolSubjectOptionHtml.="<option value=\"{$subject->getId()}\">{$subject->getSubjectName()}</option>)";
         }
-        
+
         echo <<<EXAMFORM
         <div class="modal fade" id="newExam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <form action="$url/new" method="post" name="newExamForm">

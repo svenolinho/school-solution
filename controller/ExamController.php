@@ -6,6 +6,7 @@ include_once 'model/SchoolSubject.php';
 include_once 'model/Exam.php';
 include_once 'lib/MySqlAdapter.php';
 include_once 'view/pruefungen/ExamView.php';
+include_once 'view/pruefungen/ShowExamNotes.php';
 
 class ExamController extends Controller {
 
@@ -16,11 +17,11 @@ class ExamController extends Controller {
     }
 
     protected function create() {
-        $subject = filter_input(INPUT_POST,'subject',FILTER_VALIDATE_INT);
-        $schoolClass = filter_input(INPUT_POST,'schoolClass',FILTER_VALIDATE_INT);
-        $clef = filter_input(INPUT_POST,'clef',FILTER_DEFAULT);
-        $date = filter_input(INPUT_POST,'date',FILTER_DEFAULT);
-        $maxScore = filter_input(INPUT_POST,'maxScore',FILTER_VALIDATE_FLOAT);
+        $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
+        $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
+        $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
+        $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
+        $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
         $this->mysqlAdapter->addExam($subject, $schoolClass, $clef, $date, $maxScore);
         $this->index();
     }
@@ -33,9 +34,19 @@ class ExamController extends Controller {
 
     protected function edit() {
         $id = $_POST['schoolsubject-id'];
-        $subjectName = $_POST['schoolsubject'];
-        $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore);
-        $this->index();
+        $subject = $_POST['schoolsubject'];
+        $schoolClass = $_POST['klasse'];
+        $clef = $_POST['clef'];
+        $date = $_POST['date'];
+        $maxScore = $_POST['maxScore'];
+        $note = $_POST['note'];
+        if ($note == NULL) {
+            $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note= NULL);
+            $this->index();
+        } else if ($note == !NULL) {
+            $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note);
+            $this->index();
+        }
     }
 
     protected function index() {
@@ -55,6 +66,15 @@ class ExamController extends Controller {
 
     protected function show() {
         
+    }
+
+    protected function showNotes() {
+
+        $id = $_GET['id'];
+        $notes = $this->mysqlAdapter->getExam($id);
+        $view = new ShowExamNotes();
+        $view->assign1('notes', $notes);
+        $view->display();
     }
 
 //put your code here

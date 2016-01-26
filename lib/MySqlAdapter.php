@@ -14,6 +14,7 @@ class MySqlAdapter {
     private $password;
     private $db;
     private $con;
+    private $error;
 
     function __construct($host, $user, $password, $db) {
         $this->host = $host;
@@ -93,12 +94,18 @@ class MySqlAdapter {
     }
 
     public function deleteClass($id) {
+        include_once 'lib/MySqlError.php';
         $stmt = $this->con->prepare("DELETE FROM klasse WHERE PK_Klassenr=?;");
         $stmt->bind_param("s", $id);
         if (!$stmt->execute()) {
-            $error = new Error();
-            $error->displayClassDeleteError();
+            $this->error = new MySqlError(1);
+            return false;
         }
+        return true;
+    }
+    
+    public function getError(){
+        return $this->error;
     }
 
     public function deleteStudent($id) {
@@ -109,9 +116,15 @@ class MySqlAdapter {
         }
     }
 
-    public function editStudent($id, $firstname, $lastname, $email, $phone, $klasse = NULL) {
-        $stmt = $this->con->prepare("UPDATE student SET STU_name = ?, STU_vorname = ?, STU_mail = ?, STU_telnr = ?, STU_klasse = ? WHERE PK_Studnr = ?");
-        $stmt->bind_param("sssssi", $lastname, $firstname, $email, $phone, $klasse, $id);
+    public function editStudent($id, $firstname, $lastname, $email, $phone, $klasse = NULL, $note) {
+        if ($note == NULL) {
+            $stmt = $this->con->prepare("UPDATE student SET STU_name = ?, STU_vorname = ?, STU_mail = ?, STU_telnr = ?, STU_klasse = ? WHERE PK_Studnr = ?");
+            $stmt->bind_param("sssssi", $lastname, $firstname, $email, $phone, $klasse, $id);
+        } else if ($note == !NULL) {
+            $stmt = $this->con->prepare("UPDATE student SET STU_notiz = ? WHERE PK_Studnr = ?");
+            $stmt->bind_param("si", $note, $id);
+        }
+
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }
@@ -129,9 +142,59 @@ class MySqlAdapter {
         return $studentslist;
     }
 
-    public function editSchoolclass($id, $classname) {
-        $stmt = $this->con->prepare("UPDATE klasse SET KLA_name = ? WHERE PK_Klassenr=?");
-        $stmt->bind_param("ss", $classname, $id);
+    public function getExamsFromSubjects($id) {
+        include_once 'model/Exam.php';
+        $examlist = array();
+        $res = $this->con->query("SELECT * FROM pruefungen WHERE PRUEF_fach =$id");
+        while ($row = $res->fetch_assoc()) {
+            $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
+            $examlist[] = $exam;
+        }
+        $res->free();
+        return $examlist;
+    }
+
+    public function getStudent($id) {
+        include_once 'model/Student.php';
+        include_once 'view/studenten/StudentsListView.php';
+        $res = $this->con->query("SELECT * FROM student WHERE PK_Studnr = $id");
+        if (($row = $res->fetch_assoc())) {
+            $student = new Student($row['PK_Studnr'], $row['STU_name'], $row['STU_vorname'], $row['STU_mail'], $row['STU_telnr'], $row['STU_notiz']);
+        }
+        $res->free();
+        return $student;
+    }
+
+    public function getExam($id) {
+        include_once 'model/Exam.php';
+        include_once 'view/pruefungen/ExamView.php';
+        $res = $this->con->query("SELECT * FROM pruefungen WHERE PK_Pruefnr = $id");
+        if (($row = $res->fetch_assoc())) {
+            $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl'], $row['PRUEF_notiz']);
+        }
+        $res->free();
+        return $exam;
+    }
+
+    public function getSchoolClass($id) {
+        include_once 'model/SchoolClass.php';
+        include_once 'view/klassen/ClassListView.php';
+        $res = $this->con->query("SELECT * FROM klasse WHERE PK_Klassenr = $id");
+        if (($row = $res->fetch_assoc())) {
+            $schoolClass = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
+        }
+        $res->free();
+        return $schoolClass;
+    }
+
+    public function editSchoolclass($id, $classname, $note) {
+        if ($note == NULL) {
+            $stmt = $this->con->prepare("UPDATE klasse SET KLA_name = ? WHERE PK_Klassenr=?");
+            $stmt->bind_param("si", $classname, $id);
+        } else if ($note == !NULL) {
+            $stmt = $this->con->prepare("UPDATE klasse SET KLA_notiz = ? WHERE PK_Klassenr=?");
+            $stmt->bind_param("si", $note, $id);
+        }
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }
@@ -164,7 +227,7 @@ class MySqlAdapter {
             $error->displaySubjectDeleteError();
         }
     }
-    
+
     public function getSchoolSubjects() {
         $schoolSubjects = array();
         $res = $this->con->query("SELECT * FROM fach ORDER BY FACH_name");
@@ -175,7 +238,7 @@ class MySqlAdapter {
         $res->free();
         return $schoolSubjects;
     }
-    
+
     public function addExam($subject, $schoolClass, $clef, $date, $maxScore) {
         $stmt = $this->con->prepare("INSERT INTO pruefungen (PRUEF_fach,PRUEF_klasse,PRUEF_notenschluessel,PRUEF_datum,PRUEF_maxPunktzahl) VALUES (?,?,?,?,?)");
         $stmt->bind_param("iissd", $subject, $schoolClass, $clef, $date, $maxScore);
@@ -193,7 +256,7 @@ class MySqlAdapter {
         while ($row = $res->fetch_assoc()) {
             $subject = new SchoolSubject($row['PK_Fachnr'], $row['FACH_name']);
             $class = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
-            $exam = new Exam($row['PK_Pruefnr'], $subject,$class,$row['PRUEF_notenschluessel'],$row['PRUEF_datum'],$row['PRUEF_maxpunktzahl']);
+            $exam = new Exam($row['PK_Pruefnr'], $subject, $class, $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
             $exams[] = $exam;
         }
         $res->free();
@@ -209,9 +272,15 @@ class MySqlAdapter {
         }
     }
 
-    public function editExam($id, $subject, $schoolClass, $clef, $date, $maxScore) {
-        $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_fach = ?,PRUEF_klasse = ?,PRUEF_notenschluessel = ?,PRUEF_datum = ?, PRUEF_maxPunkzahl = ? WHERE PK_Pruefnr=?");
-        $stmt->bind_param("iissdi", $subject, $schoolClass, $clef, $date, $maxScore);
+    public function editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note) {
+        if ($note == NULL) {
+            $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_fach = ?,PRUEF_klasse = ?,PRUEF_notenschluessel = ?,PRUEF_datum = ?, PRUEF_maxPunkzahl = ? WHERE PK_Pruefnr=?");
+            $stmt->bind_param("iissdi", $subject, $schoolClass, $clef, $date, $maxScore, $id);
+        } else if ($note == !NULL) {
+            $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_notiz = ? WHERE PK_Pruefnr=?");
+            $stmt->bind_param("si", $note, $id);
+        }
+
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }
