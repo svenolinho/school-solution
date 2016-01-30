@@ -198,7 +198,7 @@ class MySqlAdapter
         return $exam;
     }
 
-    public function getExamWithStudents($id)
+    public function getExamWithStudentScore($id)
     {
         include_once 'model/Exam.php';
         include_once 'model/Student.php';
@@ -344,6 +344,39 @@ class MySqlAdapter
         $stmt->bind_param("si", $note, $id);
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
+        }
+    }
+
+    public function addExamScore($examId, $studentId, $present, $score)
+    {
+        $present = ($present ? 1:0);
+        $stmt = $this->con->prepare("INSERT INTO pruefung_student (PruefStud_pruefung,PruefStud_student,PruefStud_anwesend,PruefStud_punktzahl) VALUES (?,?,?,?)");
+        $stmt->bind_param("iiii", $examId, $studentId, $present, $score);
+
+        if ($stmt->execute()) {
+
+        } else {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
+    }
+
+    public function getExamIdOfScore($scoreId)
+    {
+        $scoreId = $this->con->real_escape_string($scoreId);
+        $res = $this->con->query("SELECT PruefStud_pruefung FROM pruefung_student WHERE PK_PruefStudnr = $scoreId");
+        if (($row = $res->fetch_assoc())) {
+            $examId = $row['PruefStud_pruefung'];
+        }
+        $res->free();
+        return $examId;
+    }
+
+    public function deleteScore($scoreId)
+    {
+        $stmt = $this->con->prepare("DELETE FROM pruefung_student WHERE PK_PruefStudnr=?;");
+        $stmt->bind_param("i", $scoreId);
+        if (!$stmt->execute()) {
+            // TODO
         }
     }
 

@@ -18,23 +18,47 @@ class ExamController extends Controller {
     }
 
     protected function create() {
-        $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
-        $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
-        $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
-        $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
-        $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
-        $this->mysqlAdapter->addExam($subject, $schoolClass, $clef, $date, $maxScore);
-        $this->index();
+        if(preg_match("@^.*/new-score@", $_SERVER['REQUEST_URI'])){
+            $examId = filter_input(INPUT_POST, 'examId', FILTER_VALIDATE_INT);
+            $studentId = filter_input(INPUT_POST, 'studentId', FILTER_VALIDATE_INT);
+            $present = filter_input(INPUT_POST, 'present', FILTER_VALIDATE_BOOLEAN);
+            if(!$present){
+                $present = false;
+            }
+            $score = filter_input(INPUT_POST, 'score', FILTER_VALIDATE_FLOAT);
+            $this->mysqlAdapter->addExamScore($examId, $studentId, $present, $score);
+            $this->showExam($examId);
+        }else {
+            $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
+            $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
+            $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
+            $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
+            $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
+            $this->mysqlAdapter->addExam($subject, $schoolClass, $clef, $date, $maxScore);
+            $this->index();
+        }
     }
 
     protected function delete() {
-        $id = $_GET['id'];
-        $this->mysqlAdapter->deleteExam($id);
-        $this->index();
+        if(preg_match("@^.*/delete-score@", $_SERVER['REQUEST_URI'])){
+            $scoreId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+            $examId = $this->mysqlAdapter->getExamIdOfScore($scoreId);
+            $this->mysqlAdapter->deleteScore($scoreId);
+            $this->showExam($examId);
+        } else {
+            $examId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+            $this->mysqlAdapter->deleteExam($examId);
+            $this->index();
+        }
     }
 
     protected function edit() {
-        if (!preg_match("@^.*/edit-note@", $_SERVER['REQUEST_URI'])) {
+        if (preg_match("@^.*/edit-note@", $_SERVER['REQUEST_URI'])) {
+            $note = filter_input(INPUT_POST, 'note', FILTER_DEFAULT);
+            $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+            $this->mysqlAdapter->updateExamNote($id, $note);
+            $this->index();
+        } else {
             $id = filter_input(INPUT_POST, 'examId', FILTER_VALIDATE_INT);
             $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
             $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
@@ -42,11 +66,6 @@ class ExamController extends Controller {
             $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
             $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
             $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note= NULL);
-            $this->index();
-        } else {
-            $note = filter_input(INPUT_POST, 'note', FILTER_DEFAULT);
-            $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-            $this->mysqlAdapter->updateExamNote($id, $note);
             $this->index();
         }
     }
@@ -68,9 +87,15 @@ class ExamController extends Controller {
 
     protected function show() {
         $examId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-        $exam = $this->mysqlAdapter->getExamWithStudents($examId);
+        $this->showExam($examId);
+    }
+
+    private function showExam($examId){
+        $exam = $this->mysqlAdapter->getExamWithStudentScore($examId);
+        $students = $this->mysqlAdapter->getStudents();
         $view = new ScoreView();
         $view->assign1('exam', $exam);
+        $view->assign1('students', $students);
         $view->display();
     }
 

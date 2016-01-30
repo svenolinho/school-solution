@@ -2,3 +2,6 @@
 - notenschlüssel überprüfung (js und im backend)
 - notenberechnung
 
+
+optional:
+- nur ein resultat pro prüfung und student (momentan: gleich prüfung mehrere resultate für selben student möglich)

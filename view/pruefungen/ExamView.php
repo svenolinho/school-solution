@@ -21,6 +21,7 @@ class ExamView extends View {
                         <th>Datum</th>
                         <th>Fach</th>
                         <th>Klasse</th>
+                        <th colspan="3"></th>
                     </tr>
                 </head>
 THEAD;

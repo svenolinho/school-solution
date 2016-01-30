@@ -27,6 +27,7 @@ class StudentsListView extends View {
         echo "<th>E-Mail</th>";
         echo "<th>Telefonnummer</th>";
         echo "<th>Klasse</th>";
+        echo "<th colspan=\"3\"></th>";
         echo "</tr>";
         echo "</thead>";
 
