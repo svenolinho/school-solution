@@ -32,8 +32,9 @@ THEAD;
             $urlDelete = URI_PRUEFUNGEN . "/delete-" . $exam->getId();
             $urlNote = URI_PRUEFUNGEN . "/notes-" . $exam->getDate();
 
+            $date = new DateTime($exam->getDate());
             echo "<tr data-toggle=\"schoolexam-row\" data-schoolexam-id=\"$id\">";
-            echo "<td data-id=\"schoolexam\"><a href=\"$urlClass?id=$id\" class=\"list-group-item\">{$exam->getDate()}</a></td>";
+            echo "<td data-id=\"schoolexam\"><a href=\"$urlClass?id=$id\" class=\"list-group-item\">{$date->format("d.m.Y")}</a></td>";
             echo "<td data-id=\"schoolexam\"><a href=\"$urlClass?id=$id\" class=\"list-group-item\">{$exam->getSubjectName()}</a></td>";
             echo "<td data-id=\"schoolexam\"><a href=\"$urlClass?id=$id\" class=\"list-group-item\">{$exam->getSchoolClassName()}</a></td>";
             echo "<td>";

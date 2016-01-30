@@ -9,11 +9,12 @@ class ScoreView extends View
     {
         $scoresListHtml = "";
         foreach ($this->vars['exam']->getStudentScores() as $score) {
-            $scoresListHtml.= "<tr>";
-            $scoresListHtml.= "<td>{$score->getStudent()->getLastName()} {$score->getStudent()->getFirstName()}</td>";
+            $scoresListHtml.= "<tr data-toggle=\"studentscore-row\" data-studentscore-id=\"{$score->getId()}\">";
+            $scoresListHtml.= "<td data-id=\"student\" data-value=\"{$score->getStudent()->getId()}\">{$score->getStudent()->getLastName()} {$score->getStudent()->getFirstName()}</td>";
             $present = ($score->getPresent() ? 'Ja':'Nein');
-            $scoresListHtml.= "<td>{$present}</td>";
-            $scoresListHtml.= "<td>{$score->getScore()}</td>";
+            $presentValue = ($score->getPresent() ? '1':'0');
+            $scoresListHtml.= "<td data-id=\"present\" data-value=\"{$presentValue}\">{$present}</td>";
+            $scoresListHtml.= "<td data-id=\"score\">{$score->getScore()}</td>";
             $scoresListHtml.= "<td>TODO</td>";
 
             $urlDelete = URI_PRUEFUNGEN . "/delete-score" . $score->getId();
@@ -22,11 +23,12 @@ class ScoreView extends View
             $scoresListHtml.= "</tr>";
         }
 
+        $date = new DateTime($this->vars['exam']->getDate());
         echo <<<OVERVIEW
-        <h3>{$this->vars['exam']->getSubjectName()} Pr&uuml;fung vom {$this->vars['exam']->getDate()}</h3>
+        <h3>{$this->vars['exam']->getSubjectName()} Pr&uuml;fung vom {$date->format("d.m.Y")}</h3>
         <div class="row">
             <div class="col-md-2">Datum</div>
-            <div class="col-md-10">{$this->vars['exam']->getDate()}</div>
+            <div class="col-md-10">{$date->format("d.m.Y")}</div>
         </div>
         <div class="row">
             <div class="col-md-2">Fach</div>
@@ -103,6 +105,45 @@ OVERVIEW;
             </form>
       </div>
 NEWSCORE;
+
+        echo "<script src=\"/js/studentscore-form.js\" type=\"text/javascript\"></script>";
+
+        echo <<<EDITSCORE
+        <div class="modal fade" id="editScore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <form action="$url/edit-score" method="post" name="editScoreForm">
+                <input type="hidden" name="scoreId" />
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title">Neue Pr&uuml;fung</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="schoolClass">Schüler</label>
+                            <select class="form-control" name="studentId" id="studentId">
+                                $studentsOptionHtml
+                            </select>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="present" id="present" value="true"> Anwesend
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxScore">Erreichte Punktzahl</label>
+                            <input type="text" name="score" id="score" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <a class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                      <a class="btn btn-success" onClick="javascript:document.editScoreForm.submit();"><span class="glyphicon glyphicon-ok"></span></a>
+                    </div>
+                  </div>
+                </div>
+            </form>
+      </div>
+EDITSCORE;
 
 
     }

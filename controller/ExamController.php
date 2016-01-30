@@ -58,6 +58,17 @@ class ExamController extends Controller {
             $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
             $this->mysqlAdapter->updateExamNote($id, $note);
             $this->index();
+        } else if (preg_match("@^.*/edit-score@", $_SERVER['REQUEST_URI'])) {
+            $scoreId = filter_input(INPUT_POST, 'scoreId', FILTER_DEFAULT);
+            $studentId = filter_input(INPUT_POST, 'studentId', FILTER_DEFAULT);
+            $present = filter_input(INPUT_POST, 'present', FILTER_VALIDATE_BOOLEAN);
+            if(!$present){
+                $present = false;
+            }
+            $score = filter_input(INPUT_POST, 'score', FILTER_VALIDATE_FLOAT);
+            $this->mysqlAdapter->updateScore($scoreId, $studentId,$present,$score);
+            $examId = $this->mysqlAdapter->getExamIdOfScore($scoreId);
+            $this->showExam($examId);
         } else {
             $id = filter_input(INPUT_POST, 'examId', FILTER_VALIDATE_INT);
             $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);

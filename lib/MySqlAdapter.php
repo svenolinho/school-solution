@@ -210,7 +210,7 @@ class MySqlAdapter
             $class = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
             $exam = new Exam($row['PK_Pruefnr'], $subject, $class, $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
         }
-        $res = $this->con->query("SELECT * FROM pruefung_student LEFT JOIN student ON PruefStud_student = student.PK_Studnr WHERE PruefStud_pruefung = $id");
+        $res = $this->con->query("SELECT * FROM pruefung_student LEFT JOIN student ON PruefStud_student = student.PK_Studnr WHERE PruefStud_pruefung = $id ORDER BY STU_name");
         while (($row = $res->fetch_assoc())) {
             $student = new Student($row['PK_Studnr'], $row['STU_name'], $row['STU_vorname']);
             $score = new Score($row['PK_PruefStudnr'], $exam, $student, boolval($row['PruefStud_anwesend']), $row['PruefStud_punktzahl']);
@@ -377,6 +377,16 @@ class MySqlAdapter
         $stmt->bind_param("i", $scoreId);
         if (!$stmt->execute()) {
             // TODO
+        }
+    }
+
+    public function updateScore($scoreId, $studentId, $present, $score)
+    {
+        $present = ($present ? 1:0);
+        $stmt = $this->con->prepare("UPDATE pruefung_student SET PruefStud_student = ?, PruefStud_anwesend = ?, PruefStud_punktzahl = ?  WHERE PK_PruefStudnr=?");
+        $stmt->bind_param("iiid", $studentId,$present,$score,$scoreId);
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
         }
     }
 
