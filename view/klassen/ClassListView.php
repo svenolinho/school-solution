@@ -58,13 +58,15 @@ class ClassListView extends View {
 
     public function displayErrors()
     {
-        switch($this->vars['mysqlResult']){
-            case MySqlResult::ClassDeleteStudentError:
-                echo "<div class=\"alert alert-danger\" role=\"alert\">Diese Klasse kann nicht gelöscht werden. Bitte entfernen Sie zuerst alle Schüler aus der Klasse und wiederholen Sie den Vorgang.</div>";
-                break;
-            case MySqlResult::ClassDeleteExamsError:
-                echo "<div class=\"alert alert-danger\" role=\"alert\">Diese Klasse kann nicht gelöscht werden. Bitte entfernen Sie zuerst alle Prüfungen dieser Klasse und wiederholen Sie den Vorgang.</div>";
-                break;
+        if (array_key_exists('mysqlResult',$this->vars)) {
+            switch ($this->vars['mysqlResult']) {
+                case MySqlResult::ClassDeleteStudentError:
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Diese Klasse kann nicht gelöscht werden. Bitte entfernen Sie zuerst alle Schüler aus der Klasse und wiederholen Sie den Vorgang.</div>";
+                    break;
+                case MySqlResult::ClassDeleteExamsError:
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Diese Klasse kann nicht gelöscht werden. Bitte entfernen Sie zuerst alle Prüfungen dieser Klasse und wiederholen Sie den Vorgang.</div>";
+                    break;
+            }
         }
     }
 

@@ -6,6 +6,7 @@ include_once 'model/SchoolSubject.php';
 include_once 'model/Exam.php';
 include_once 'lib/MySqlAdapter.php';
 include_once 'view/pruefungen/ExamView.php';
+include_once 'view/pruefungen/ScoreView.php';
 include_once 'view/pruefungen/ShowExamNotes.php';
 
 class ExamController extends Controller {
@@ -66,11 +67,14 @@ class ExamController extends Controller {
     }
 
     protected function show() {
-        
+        $examId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $exam = $this->mysqlAdapter->getExamWithStudents($examId);
+        $view = new ScoreView();
+        $view->assign1('exam', $exam);
+        $view->display();
     }
 
     protected function showNotes() {
-
         $id = $_GET['id'];
         $notes = $this->mysqlAdapter->getExam($id);
         $view = new ShowExamNotes();

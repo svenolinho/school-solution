@@ -8,6 +8,7 @@ class Exam {
     private $clef;
     private $date;
     private $maxScore;
+    private $studentScores = array();
     private $note;
 
     function __construct($id, $subject, $schoolClass, $clef, $date, $maxScore, $note = "") {
@@ -18,7 +19,6 @@ class Exam {
         $this->date = $date;
         $this->maxScore = $maxScore;
         $this->note = $note;
-        
     }
 
     function getId() {
@@ -62,6 +62,19 @@ class Exam {
 
     function getMaxScore() {
         return $this->maxScore;
+    }
+
+    public function addStudentScore($score)
+    {
+        $this->studentScores[]=$score;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStudentScores()
+    {
+        return $this->studentScores;
     }
 
 }
