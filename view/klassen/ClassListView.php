@@ -9,8 +9,8 @@ class ClassListView extends View {
 
     public function display() {
 
+        $this->displayErrors();
         $url = URI_KLASSEN;
-
         echo "<div class=\"col-md-6\">";
         echo "<div class=\"panel panel-default\">";
         echo "<div class=\"panel-heading\">";
@@ -54,6 +54,18 @@ class ClassListView extends View {
         echo "</div>";
         echo "</div>";
         echo "<script src=\"/js/school-form.js\" type=\"text/javascript\"></script>";
+    }
+
+    public function displayErrors()
+    {
+        switch($this->vars['mysqlResult']){
+            case MySqlResult::ClassDeleteStudentError:
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Diese Klasse kann nicht gelöscht werden. Bitte entfernen Sie zuerst alle Schüler aus der Klasse und wiederholen Sie den Vorgang.</div>";
+                break;
+            case MySqlResult::ClassDeleteExamsError:
+                echo "<div class=\"alert alert-danger\" role=\"alert\">Diese Klasse kann nicht gelöscht werden. Bitte entfernen Sie zuerst alle Prüfungen dieser Klasse und wiederholen Sie den Vorgang.</div>";
+                break;
+        }
     }
 
 }

@@ -94,14 +94,20 @@ class MySqlAdapter {
     }
 
     public function deleteClass($id) {
-        include_once 'lib/MySqlError.php';
         $stmt = $this->con->prepare("DELETE FROM klasse WHERE PK_Klassenr=?;");
         $stmt->bind_param("s", $id);
         if (!$stmt->execute()) {
-            $this->error = new MySqlError(1);
-            return false;
+            if($stmt->errno == 1451){
+                if(preg_match("@student@i", $stmt->error)) {
+                    return MySqlResult::ClassDeleteStudentError;
+                }
+                if(preg_match("@pruefungen@i", $stmt->error)) {
+                    return MySqlResult::ClassDeleteExamsError;
+                }
+            }
+            return MySqlResult::Unexpected;
         }
-        return true;
+        return MySqlResult::Ok;
     }
     
     public function getError(){
@@ -274,13 +280,21 @@ class MySqlAdapter {
 
     public function editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note) {
         if ($note == NULL) {
-            $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_fach = ?,PRUEF_klasse = ?,PRUEF_notenschluessel = ?,PRUEF_datum = ?, PRUEF_maxPunkzahl = ? WHERE PK_Pruefnr=?");
+            $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_fach = ?, PRUEF_klasse = ?, PRUEF_notenschluessel = ?, PRUEF_datum = ?, PRUEF_maxPunktzahl = ? WHERE PK_Pruefnr=?");
             $stmt->bind_param("iissdi", $subject, $schoolClass, $clef, $date, $maxScore, $id);
         } else if ($note == !NULL) {
             $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_notiz = ? WHERE PK_Pruefnr=?");
             $stmt->bind_param("si", $note, $id);
         }
 
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
+    }
+
+    public function updateExamNote($id,$note){
+        $stmt = $this->con->prepare("UPDATE pruefungen SET PRUEF_notiz = ? WHERE PK_Pruefnr=?");
+        $stmt->bind_param("si", $note, $id);
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }

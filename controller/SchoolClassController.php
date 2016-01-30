@@ -3,6 +3,7 @@
 include_once 'controller/Controller.php';
 include_once 'model/SchoolClass.php';
 include_once 'lib/MySqlAdapter.php';
+include_once 'lib/MySqlResult.php';
 include_once 'view/View.php';
 include_once 'view/klassen/ClassListView.php';
 include_once 'view/klassen/ShowStudentsFromClass.php';
@@ -43,11 +44,12 @@ class SchoolClassController extends Controller {
 
     protected function delete() {
         $id = $_GET['id'];
-        if($this->mysqlAdapter->deleteClass($id)){
-            header("Location: " . URI_KLASSEN);
-        }else{
-            $error = $this->mysqlAdapter->getError();
-        }
+        $mysqlResult = $this->mysqlAdapter->deleteClass($id);
+        $classList = $this->mysqlAdapter->getSchoolclasses();
+        $view = new ClassListView();
+        $view->assign1("mysqlResult", $mysqlResult);
+        $view->assign1('list', $classList);
+        $view->display();
     }
 
     protected function edit() {

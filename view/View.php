@@ -1,5 +1,5 @@
 <?php
-
+include_once 'lib/MySqlResult.php';
 /**
  * abstract class for all views 
  *

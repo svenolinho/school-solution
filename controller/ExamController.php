@@ -33,18 +33,19 @@ class ExamController extends Controller {
     }
 
     protected function edit() {
-        $id = $_POST['schoolsubject-id'];
-        $subject = $_POST['schoolsubject'];
-        $schoolClass = $_POST['klasse'];
-        $clef = $_POST['clef'];
-        $date = $_POST['date'];
-        $maxScore = $_POST['maxScore'];
-        $note = $_POST['note'];
-        if ($note == NULL) {
+        if (!preg_match("@^.*/edit-note@", $_SERVER['REQUEST_URI'])) {
+            $id = filter_input(INPUT_POST, 'examId', FILTER_VALIDATE_INT);
+            $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
+            $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
+            $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
+            $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
+            $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
             $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note= NULL);
             $this->index();
-        } else if ($note == !NULL) {
-            $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note);
+        } else {
+            $note = filter_input(INPUT_POST, 'note', FILTER_DEFAULT);
+            $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+            $this->mysqlAdapter->updateExamNote($id, $note);
             $this->index();
         }
     }
