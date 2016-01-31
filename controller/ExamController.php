@@ -37,10 +37,12 @@ class ExamController extends Controller {
             $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
             $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
             if(!Exam::isValidClef($clef)){
-                // TODO
                 throw new Exception('manipulation');
             }
             $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
+            if(!$date){
+                throw new Exception('manipulation');
+            }
             $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
             $this->mysqlAdapter->addExam($subject, $schoolClass, $clef, $date, $maxScore);
             $this->index();
@@ -54,7 +56,7 @@ class ExamController extends Controller {
             $this->mysqlAdapter->deleteScore($scoreId);
             $this->showExam($examId);
         } else {
-            $examId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+            $examId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
             $this->mysqlAdapter->deleteExam($examId);
             $this->index();
         }
@@ -83,10 +85,12 @@ class ExamController extends Controller {
             $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
             $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
             if(!Exam::isValidClef($clef)){
-                // TODO
-                throw new Exception('TODO');
+                throw new Exception('manipulation');
             }
             $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
+            if(!$date){
+                throw new Exception('manipulation');
+            }
             $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
             $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note= NULL);
             $this->index();

@@ -53,10 +53,13 @@ class Score {
         if (Exam::isValidClef($clef)) {
             $clef = preg_replace('/e(?!x)/', '$score', $clef);
             $clef = preg_replace('/m/', '$maxScore', $clef);
-            eval('$result = '.$clef.';');
-            $result = round($result, 2);
+            $success = eval('$result = '.$clef.';');
+            if ( $success === false && (error_get_last())) {
+                return -1;
+            }
+            return round($result, 2);
         }
-        return $result;
+        return -1;
     }
 
 }

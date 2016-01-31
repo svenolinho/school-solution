@@ -7,6 +7,10 @@ RewriteCond %{REQUEST_FILENAME} -d
 # this rule defines that no changes are made to requests matching the preceding conditions
 # NC means No Case, it is treated case insensitively
 # L means Last, if the pattern matches, no more rules are processed
+
 RewriteRule ^.*$ - [NC,L]
 
+RewriteRule ^rest/.*$ rest.php [NC,L]
+
 RewriteRule ^.*$ index.php [NC,L]
+

@@ -75,27 +75,27 @@ THEAD;
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="schoolClass">Klasse</label>
+                            <label class="control-label" for="schoolClass">Klasse</label>
                             <select class="form-control" name="schoolClass" id="schoolClass">
                                 $schoolClassOptionHtml
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="subject">Fach</label>
+                            <label class="control-label" for="subject">Fach</label>
                             <select class="form-control" name="subject" id="subject">
                                 $schoolSubjectOptionHtml
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="date">Datum</label>
+                            <label class="control-label" for="date">Datum</label>
                             <input type="date" name="date" id="date" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="clef">Notenschl&uuml;ssel</label>
+                            <label class="control-label" for="clef">Notenschl&uuml;ssel</label>
                             <input type="text" name="clef" id="clef" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="maxScore">Maximale Punktzahl</label>
+                            <label class="control-label" for="maxScore">Maximale Punktzahl</label>
                             <input type="text" name="maxScore" id="maxScore" class="form-control">
                         </div>
                     </div>
@@ -141,27 +141,27 @@ NEWEXAMFORM;
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="schoolClass">Klasse</label>
+                            <label class="control-label" for="schoolClass">Klasse</label>
                             <select class="form-control" name="schoolClass" id="schoolClass">
                                 $schoolClassOptionHtml
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="subject">Fach</label>
+                            <label class="control-label" for="subject">Fach</label>
                             <select class="form-control" name="subject" id="subject">
                                 $schoolSubjectOptionHtml
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="date">Datum</label>
+                            <label class="control-label" for="date">Datum</label>
                             <input type="date" name="date" id="date" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="clef">Notenschl&uuml;ssel</label>
+                            <label class="control-label" for="clef">Notenschl&uuml;ssel</label>
                             <input type="text" name="clef" id="clef" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="maxScore">Maximale Punktzahl</label>
+                            <label class="control-label" for="maxScore">Maximale Punktzahl</label>
                             <input type="text" name="maxScore" id="maxScore" class="form-control">
                         </div>
                     </div>

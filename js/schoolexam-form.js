@@ -12,6 +12,20 @@ $(document).ready(function () {
     });
     $("a[data-submit]").click(function(e){
         e.preventDefault();
-        var form = $(this).closest("form").submit();
+        var form = $(this).closest("form");
+        form.find("div.form-group").removeClass("has-error");
+        var dateInput = form.find("input[name=date]");
+        if(!dateInput.val()){
+            dateInput.closest("div.form-group").addClass("has-error");
+        }
+        var clefInput = form.find("input[name=clef]");
+        var clef = clefInput.val();
+        $.ajax({
+            url: "/rest/exams/validateClef?clef="+encodeURIComponent(clef),
+        }).done(function() {
+            form.submit();
+        }).fail(function(){
+            clefInput.closest("div.form-group").addClass("has-error");
+        });
     });
 });

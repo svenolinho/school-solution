@@ -70,9 +70,9 @@ class MySqlAdapter
         $stmt->bind_param("s", $classname);
 
         if ($stmt->execute()) {
-
+            return MySqlResult::Ok;
         } else {
-            echo "Error: <br>" . mysqli_error($this->con);
+            return MySqlResult::Unexpected;
         }
     }
 

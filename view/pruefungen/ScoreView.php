@@ -21,9 +21,11 @@ class ScoreView extends View
             $scoresListHtml.= "<td><a class=\"btn btn-primary\" role=\"button\" data-toggle=\"modal\" data-target=\"#editScore\" data-score-start-edit data-toggle=\"tooltip\" data-placement=\"right\" title=\"Bearbeiten\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>";
             $scoresListHtml.= "</tr>";
         }
+        $url = URI_PRUEFUNGEN;
 
         $date = new DateTime($this->vars['exam']->getDate());
         echo <<<OVERVIEW
+        <a href="$url" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Zurück</a>
         <h3>{$this->vars['exam']->getSubjectName()} Pr&uuml;fung vom {$date->format("d.m.Y")}</h3>
         <div class="row">
             <div class="col-md-2">Datum</div>

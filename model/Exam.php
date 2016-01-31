@@ -1,7 +1,6 @@
 <?php
 
 class Exam {
-    const CLEF_REGEX = '/^(((?:\d+(?:[,.]\d+)?|e|m)|(?:sinh?|cosh?|tanh?|abs|acosh?|asinh?|atanh?|exp|log10|deg2rad|rad2deg|sqrt|ceil|floor|round)\s*\((?1)+\)|\((?1)+\))(?:[+\/*\^%-](?1))?)+$/';
     private $id;
     private $subject;
     private $schoolClass;
@@ -79,7 +78,19 @@ class Exam {
 
     public static function isValidClef($clef){
         $clef = preg_replace('/\s+/', '', $clef);
-        return preg_match(self::CLEF_REGEX, $clef);
+        // e variable must be present
+        if(!preg_match('/e(?![xm])/',$clef)){
+            return false;
+        }
+        // m variable must be present
+        if(!preg_match('/m(?!e)/',$clef)){
+            return false;
+        }
+        // https://regex101.com/r/cD1wA0/
+        $numbers = "(?:\d+(?:[.]\d+)?|e|m)(?!\(|(?2))";
+        $functions = "(?:sinh?|cosh?|tanh?|abs|acosh?|asinh?|atanh?|exp|log10|deg2rad|rad2deg|sqrt|ceil|floor|round)\s*\((?1)(?:,(?1))?+\)(?!\(|(?2))";
+        $evalRegex = "/^((".$numbers."|".$functions."|\((?1)+\))(?:[+\/*\^-](?1))?)+$/";
+        return preg_match($evalRegex, $clef);
     }
 
 }
