@@ -92,6 +92,7 @@ THEAD;
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="clef">Notenschl&uuml;ssel</label>
+                            <span class="glyphicon glyphicon-info-sign control-label" data-toggle="tooltip" title="Der Notenschlüssel kann eine beliebige Formel sein. Zwingend müssen die Variabeln e (erreichte Punktzahl) und m (maximale Punktzahl) vorhanden sein. Funktionen (sin,sinh,cos,cosh,tan,tanh,abs,acos,acosh,asin,asinh,atan,atanh,exp,log10,deg2rad,rad2deg,sqrt,ceil,floor,round) können verwendet werden. Beispiel: (1+(5*(e/m)))" data-placement="top"></span>
                             <input type="text" name="clef" id="clef" class="form-control">
                         </div>
                         <div class="form-group">
@@ -158,6 +159,7 @@ NEWEXAMFORM;
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="clef">Notenschl&uuml;ssel</label>
+                            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Der Notenschlüssel kann eine beliebige Formel sein. Zwingend müssen die Variabeln e (erreichte Punktzahl) und m (maximale Punktzahl) vorhanden sein. Funktionen (sin,sinh,cos,cosh,tan,tanh,abs,acos,acosh,asin,asinh,atan,atanh,exp,log10,deg2rad,rad2deg,sqrt,ceil,floor,round) können verwendet werden. Beispiel: (1+(5*(e/m)))" data-placement="top"></span>
                             <input type="text" name="clef" id="clef" class="form-control">
                         </div>
                         <div class="form-group">

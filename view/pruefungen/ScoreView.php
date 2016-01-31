@@ -37,7 +37,7 @@ class ScoreView extends View
         </div>
         <div class="row">
             <div class="col-md-2">Notenschlüssel</div>
-            <div class="col-md-10">{$this->vars['exam']->getClef()}</div>
+            <div class="col-md-10">{$this->vars['exam']->getPrettyClef("[erreichte Punktzahl]","[maximale Punktzahl]")}</div>
         </div>
         <div class="row">
             <div class="col-md-2">Maximale Punktzahl</div>

@@ -93,4 +93,10 @@ class Exam {
         return preg_match($evalRegex, $clef);
     }
 
+    public function getPrettyClef($scoredString,$maxScoreString){
+        $prettyClef = preg_replace('/e(?![xm])/',$scoredString,$this->clef);
+        $prettyClef = preg_replace('/m(?!e)/',$maxScoreString,$prettyClef);
+        return $prettyClef;
+    }
+
 }
