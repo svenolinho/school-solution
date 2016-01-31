@@ -39,7 +39,7 @@ class ScoreView extends View
         </div>
         <div class="row">
             <div class="col-md-2">Maximale Punktzahl</div>
-            <div class="col-md-10">{$this->vars['exam']->getMaxScore()}</div>
+            <div class="col-md-10" data-max-score="{$this->vars['exam']->getMaxScore()}">{$this->vars['exam']->getMaxScore()}</div>
         </div>
         <div class="panel panel-default">
         <div class="panel-heading">
@@ -80,7 +80,7 @@ OVERVIEW;
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="schoolClass">Schüler</label>
+                            <label class="control-label" for="schoolClass">Schüler</label>
                             <select class="form-control" name="studentId" id="studentId">
                                 $studentsOptionHtml
                             </select>
@@ -91,13 +91,13 @@ OVERVIEW;
                             </label>
                         </div>
                         <div class="form-group">
-                            <label for="maxScore">Erreichte Punktzahl</label>
+                            <label class="control-label" for="score">Erreichte Punktzahl</label>
                             <input type="text" name="score" id="score" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
                       <a class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                      <a class="btn btn-success" onClick="javascript:document.newScoreForm.submit();"><span class="glyphicon glyphicon-ok"></span></a>
+                      <a class="btn btn-success" data-submit><span class="glyphicon glyphicon-ok"></span></a>
                     </div>
                   </div>
                 </div>
@@ -119,7 +119,7 @@ NEWSCORE;
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="schoolClass">Schüler</label>
+                            <label class="control-label" for="studentId">Schüler</label>
                             <select class="form-control" name="studentId" id="studentId">
                                 $studentsOptionHtml
                             </select>
@@ -130,13 +130,13 @@ NEWSCORE;
                             </label>
                         </div>
                         <div class="form-group">
-                            <label for="maxScore">Erreichte Punktzahl</label>
+                            <label class="control-label" for="score">Erreichte Punktzahl</label>
                             <input type="text" name="score" id="score" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
                       <a class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                      <a class="btn btn-success" onClick="javascript:document.editScoreForm.submit();"><span class="glyphicon glyphicon-ok"></span></a>
+                      <a class="btn btn-success" data-submit><span class="glyphicon glyphicon-ok"></span></a>
                     </div>
                   </div>
                 </div>

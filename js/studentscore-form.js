@@ -11,4 +11,18 @@ $(document).ready(function () {
         $("#editScore input[name=present]").prop('checked', present);
         $("#editScore input[name=score]").val(score);
     });
+    $("a[data-submit]").click(function(e){
+        e.preventDefault();
+        var form = $(this).closest("form");
+        var scoreInput = form.find("input[name=score]");
+        var score = scoreInput.val();
+        var maxScore = $("[data-max-score]").data("max-score");
+        debugger;
+        if(score > maxScore){
+            var row = scoreInput.closest("div.form-group");
+            row.toggleClass("has-error");
+        }else {
+            form.submit();
+        }
+    });
 });
