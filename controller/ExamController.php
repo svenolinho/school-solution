@@ -26,12 +26,20 @@ class ExamController extends Controller {
                 $present = false;
             }
             $score = filter_input(INPUT_POST, 'score', FILTER_VALIDATE_FLOAT);
+            $exam = $this->mysqlAdapter->getExam($examId);
+            if($score > $exam->getMaxScore()){
+                throw new Exception('manipulation');
+            }
             $this->mysqlAdapter->addExamScore($examId, $studentId, $present, $score);
             $this->showExam($examId);
         }else {
             $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
             $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
             $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
+            if(!Exam::isValidClef($clef)){
+                // TODO
+                throw new Exception('manipulation');
+            }
             $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
             $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
             $this->mysqlAdapter->addExam($subject, $schoolClass, $clef, $date, $maxScore);
@@ -74,6 +82,10 @@ class ExamController extends Controller {
             $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
             $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
             $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
+            if(!Exam::isValidClef($clef)){
+                // TODO
+                throw new Exception('TODO');
+            }
             $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
             $maxScore = filter_input(INPUT_POST, 'maxScore', FILTER_VALIDATE_FLOAT);
             $this->mysqlAdapter->editExam($id, $subject, $schoolClass, $clef, $date, $maxScore, $note= NULL);
@@ -90,6 +102,7 @@ class ExamController extends Controller {
         $view->assign1('schoolClassList', $schoolClassList);
         $view->assign1('schoolSubjectList', $schoolSubjectList);
         $view->display();
+        exit;
     }
 
     protected function init() {

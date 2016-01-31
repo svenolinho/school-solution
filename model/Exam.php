@@ -1,7 +1,7 @@
 <?php
 
 class Exam {
-
+    const CLEF_REGEX = '/^(((?:\d+(?:[,.]\d+)?|e|m)|(?:sinh?|cosh?|tanh?|abs|acosh?|asinh?|atanh?|exp|log10|deg2rad|rad2deg|sqrt|ceil|floor|round)\s*\((?1)+\)|\((?1)+\))(?:[+\/*\^%-](?1))?)+$/';
     private $id;
     private $subject;
     private $schoolClass;
@@ -75,6 +75,11 @@ class Exam {
     public function getStudentScores()
     {
         return $this->studentScores;
+    }
+
+    public static function isValidClef($clef){
+        $clef = preg_replace('/\s+/', '', $clef);
+        return preg_match(self::CLEF_REGEX, $clef);
     }
 
 }

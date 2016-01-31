@@ -41,4 +41,22 @@ class Score {
         return $this->score;
     }
 
+    public function getEvaluatedScore()
+    {
+        if(!$this->present){
+            return 1;
+        }
+        $clef = $this->exam->getClef();
+        $maxScore = $this->exam->getMaxScore();
+        $score = $this->score;
+        $result = -1;
+        if (Exam::isValidClef($clef)) {
+            $clef = preg_replace('/e(?!x)/', '$score', $clef);
+            $clef = preg_replace('/m/', '$maxScore', $clef);
+            eval('$result = '.$clef.';');
+            $result = round($result, 2);
+        }
+        return $result;
+    }
+
 }

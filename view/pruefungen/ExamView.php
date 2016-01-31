@@ -101,7 +101,7 @@ THEAD;
                     </div>
                     <div class="modal-footer">
                       <a class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                      <a class="btn btn-success" onClick="javascript:document.newExamForm.submit();"><span class="glyphicon glyphicon-ok"></span></a>
+                      <a class="btn btn-success" data-submit><span class="glyphicon glyphicon-ok"></span></a>
                     </div>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ NEWEXAMFORM;
                     </div>
                     <div class="modal-footer">
                       <a class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                      <a class="btn btn-success" onClick="javascript:document.editExamForm.submit();"><span class="glyphicon glyphicon-ok"></span></a>
+                      <a class="btn btn-success" data-submit><span class="glyphicon glyphicon-ok"></span></a>
                     </div>
                   </div>
                 </div>

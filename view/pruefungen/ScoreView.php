@@ -15,8 +15,7 @@ class ScoreView extends View
             $presentValue = ($score->getPresent() ? '1':'0');
             $scoresListHtml.= "<td data-id=\"present\" data-value=\"{$presentValue}\">{$present}</td>";
             $scoresListHtml.= "<td data-id=\"score\">{$score->getScore()}</td>";
-            $scoresListHtml.= "<td>TODO</td>";
-
+            $scoresListHtml.= "<td>{$score->getEvaluatedScore()}</td>";
             $urlDelete = URI_PRUEFUNGEN . "/delete-score" . $score->getId();
             $scoresListHtml.= "<td><a href=\"$urlDelete?id={$score->getId()}\" class=\"btn btn-danger\" role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Löschen\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>";
             $scoresListHtml.= "<td><a class=\"btn btn-primary\" role=\"button\" data-toggle=\"modal\" data-target=\"#editScore\" data-score-start-edit data-toggle=\"tooltip\" data-placement=\"right\" title=\"Bearbeiten\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>";
@@ -147,5 +146,4 @@ EDITSCORE;
 
 
     }
-
 }

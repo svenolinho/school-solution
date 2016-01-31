@@ -1,6 +1,6 @@
 - panel body in exam view
-- notenschlüssel überprüfung (js und im backend)
-- notenberechnung
+- notenschlüssel fehler bei falscher angabe
+- überprüfung punktzahl nicht grösser als maxpunktzahl in frontend
 
 
 optional:

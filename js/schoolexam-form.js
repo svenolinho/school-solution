@@ -10,4 +10,8 @@ $(document).ready(function () {
         $("#editExam input[name=clef]").val(selectedExam['clef']);
         $("#editExam input[name=maxScore]").val(selectedExam['maxScore']);
     });
+    $("a[data-submit]").click(function(e){
+        e.preventDefault();
+        var form = $(this).closest("form").submit();
+    });
 });
