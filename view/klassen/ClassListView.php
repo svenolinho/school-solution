@@ -41,7 +41,7 @@ class ClassListView extends View {
         }
 
         echo "<tr data-schoolclass-row style=\"display:none\">";
-        echo "<td><input type=\"text\" class=\"form-control\" name=\"schoolclass\">";
+        echo "<td><div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"schoolclass\"></div>";
         echo "<input type=\"hidden\" name=\"schoolclass-id\">";
         echo "</td>";
         echo "<td><a class=\"btn btn-danger\" data-toggle=\"schoolclass-abort\"><span class=\"glyphicon glyphicon-remove\"></td>";
@@ -53,7 +53,7 @@ class ClassListView extends View {
         echo "</form>";
         echo "</div>";
         echo "</div>";
-        echo "<script src=\"/js/school-form.js\" type=\"text/javascript\"></script>";
+        echo "<script src=\"/js/schoolclass-form.js\" type=\"text/javascript\"></script>";
     }
 
     public function displayErrors()

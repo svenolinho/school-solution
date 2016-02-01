@@ -17,7 +17,7 @@ class ShowSchoolClassNotes extends View {
 
         echo "<h3>Notizen von: <span class=\"label label-default\">{$this->vars['notes']->getName()}</span></h3>";
 
-        echo "<form action=\"edit-note-\" method=\"POST\" name=\"noteForm\">";
+        echo "<form action=\"edit-note\" method=\"POST\" name=\"noteForm\">";
         echo "<textarea id=\"note\" name=\"note\" rows = \"10\" cols = \"100\">";
         echo "{$this->vars['notes']->getNote()}";
         echo "</textarea><br>";

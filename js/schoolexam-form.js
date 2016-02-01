@@ -15,6 +15,14 @@ $(document).ready(function () {
         var form = $(this).closest("form");
         form.find("div.form-group").removeClass("has-error");
         var dateInput = form.find("input[name=date]");
+        var schoolClass = form.find("select[name=schoolClass]");
+        if(!form.find("option:selected").length){
+            schoolClass.closest("div.form-group").addClass("has-error");
+        }
+        var subject = form.find("select[name=subject]");
+        if(!form.find("option:selected").length){
+            subject.closest("div.form-group").addClass("has-error");
+        }
         if(!dateInput.val()){
             dateInput.closest("div.form-group").addClass("has-error");
         }

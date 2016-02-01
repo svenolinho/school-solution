@@ -32,7 +32,7 @@ class SchoolSubjectView extends View {
         }
 
         echo "<tr data-schoolsubject-row style=\"display:none\">";
-        echo "<td><input type=\"text\" class=\"form-control\" name=\"schoolsubject\">";
+        echo "<td><div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"schoolsubject\"></div>";
         echo "<input type=\"hidden\" name=\"schoolsubject-id\">";
         echo "</td>";
         echo "<td><a class=\"btn btn-danger\" data-toggle=\"schoolsubject-abort\"><span class=\"glyphicon glyphicon-remove\"></span></a></td>";

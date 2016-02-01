@@ -26,8 +26,11 @@ class ExamController extends Controller {
                 $present = false;
             }
             $score = filter_input(INPUT_POST, 'score', FILTER_VALIDATE_FLOAT);
+            if(!$examId){
+                throw new Exception('manipulation');
+            }
             $exam = $this->mysqlAdapter->getExam($examId);
-            if($score > $exam->getMaxScore()){
+            if($score > $exam->getMaxScore() || !$studentId){
                 throw new Exception('manipulation');
             }
             $this->mysqlAdapter->addExamScore($examId, $studentId, $present, $score);
@@ -36,7 +39,7 @@ class ExamController extends Controller {
             $subject = filter_input(INPUT_POST, 'subject', FILTER_VALIDATE_INT);
             $schoolClass = filter_input(INPUT_POST, 'schoolClass', FILTER_VALIDATE_INT);
             $clef = filter_input(INPUT_POST, 'clef', FILTER_DEFAULT);
-            if(!Exam::isValidClef($clef)){
+            if(!$subject || !$schoolClass || !$clef || !Exam::isValidClef($clef)){
                 throw new Exception('manipulation');
             }
             $date = filter_input(INPUT_POST, 'date', FILTER_DEFAULT);
@@ -69,8 +72,8 @@ class ExamController extends Controller {
             $this->mysqlAdapter->updateExamNote($id, $note);
             $this->index();
         } else if (preg_match("@^.*/edit-score@", $_SERVER['REQUEST_URI'])) {
-            $scoreId = filter_input(INPUT_POST, 'scoreId', FILTER_DEFAULT);
-            $studentId = filter_input(INPUT_POST, 'studentId', FILTER_DEFAULT);
+            $scoreId = filter_input(INPUT_POST, 'scoreId', FILTER_VALIDATE_INT);
+            $studentId = filter_input(INPUT_POST, 'studentId', FILTER_VALIDATE_INT);
             $present = filter_input(INPUT_POST, 'present', FILTER_VALIDATE_BOOLEAN);
             if(!$present){
                 $present = false;
@@ -120,7 +123,7 @@ class ExamController extends Controller {
 
     private function showExam($examId){
         $exam = $this->mysqlAdapter->getExamWithStudentScore($examId);
-        $students = $this->mysqlAdapter->getStudents();
+        $students = $this->mysqlAdapter->getStudentsOfClass($exam->getSchoolClassId());
         $view = new ScoreView();
         $view->assign1('exam', $exam);
         $view->assign1('students', $students);

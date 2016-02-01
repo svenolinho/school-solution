@@ -90,6 +90,21 @@ class MySqlAdapter
         return $list;
     }
 
+    public function getStudentsOfClass($classId)
+    {
+        include_once 'model/SchoolClass.php';
+        $list = array();
+        $classId = $this->con->real_escape_string($classId);
+        $res = $this->con->query("SELECT * FROM student LEFT JOIN klasse ON student.STU_klasse=klasse.PK_Klassenr WHERE STU_klasse = ".$classId." ORDER BY STU_name");
+        while ($row = $res->fetch_assoc()) {
+            $klasse = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
+            $student = new Student($row['PK_Studnr'], $row['STU_name'], $row['STU_vorname'], $row['STU_mail'], $row['STU_telnr'], $row['STU_notiz'], $klasse);
+            $list[] = $student;
+        }
+        $res->free();
+        return $list;
+    }
+
     public function addStudent($firstName, $lastName, $email, $phone, $klasse = NULL)
     {
         $stmt = $this->con->prepare("INSERT INTO student (STU_vorname,STU_name,STU_mail,STU_telnr,STU_klasse) VALUES (?,?,?,?,?)");
@@ -134,16 +149,19 @@ class MySqlAdapter
         }
     }
 
-    public function editStudent($id, $firstname, $lastname, $email, $phone, $klasse = NULL, $note)
+    public function editStudent($id, $firstname, $lastname, $email, $phone, $klasse = NULL)
     {
-        if ($note == NULL) {
-            $stmt = $this->con->prepare("UPDATE student SET STU_name = ?, STU_vorname = ?, STU_mail = ?, STU_telnr = ?, STU_klasse = ? WHERE PK_Studnr = ?");
-            $stmt->bind_param("sssssi", $lastname, $firstname, $email, $phone, $klasse, $id);
-        } else if ($note == !NULL) {
-            $stmt = $this->con->prepare("UPDATE student SET STU_notiz = ? WHERE PK_Studnr = ?");
-            $stmt->bind_param("si", $note, $id);
+        $stmt = $this->con->prepare("UPDATE student SET STU_name = ?, STU_vorname = ?, STU_mail = ?, STU_telnr = ?, STU_klasse = ? WHERE PK_Studnr = ?");
+        $stmt->bind_param("sssssi", $lastname, $firstname, $email, $phone, $klasse, $id);
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
         }
+    }
 
+    public function editStudentNote($id, $note)
+    {
+        $stmt = $this->con->prepare("UPDATE student SET STU_notiz = ? WHERE PK_Studnr = ?");
+        $stmt->bind_param("si", $note, $id);
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }
@@ -230,15 +248,19 @@ class MySqlAdapter
         return $schoolClass;
     }
 
-    public function editSchoolclass($id, $classname, $note)
+    public function editSchoolclass($id, $classname)
     {
-        if ($note == NULL) {
-            $stmt = $this->con->prepare("UPDATE klasse SET KLA_name = ? WHERE PK_Klassenr=?");
-            $stmt->bind_param("si", $classname, $id);
-        } else if ($note == !NULL) {
-            $stmt = $this->con->prepare("UPDATE klasse SET KLA_notiz = ? WHERE PK_Klassenr=?");
-            $stmt->bind_param("si", $note, $id);
+        $stmt = $this->con->prepare("UPDATE klasse SET KLA_name = ? WHERE PK_Klassenr=?");
+        $stmt->bind_param("si", $classname, $id);
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
         }
+    }
+
+    public function editSchoolclassNote($id, $note)
+    {
+        $stmt = $this->con->prepare("UPDATE klasse SET KLA_notiz = ? WHERE PK_Klassenr=?");
+        $stmt->bind_param("si", $note, $id);
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }
@@ -349,7 +371,7 @@ class MySqlAdapter
 
     public function addExamScore($examId, $studentId, $present, $score)
     {
-        $present = ($present ? 1:0);
+        $present = ($present ? 1 : 0);
         $stmt = $this->con->prepare("INSERT INTO pruefung_student (PruefStud_pruefung,PruefStud_student,PruefStud_anwesend,PruefStud_punktzahl) VALUES (?,?,?,?)");
         $stmt->bind_param("iiii", $examId, $studentId, $present, $score);
 
@@ -382,9 +404,9 @@ class MySqlAdapter
 
     public function updateScore($scoreId, $studentId, $present, $score)
     {
-        $present = ($present ? 1:0);
+        $present = ($present ? 1 : 0);
         $stmt = $this->con->prepare("UPDATE pruefung_student SET PruefStud_student = ?, PruefStud_anwesend = ?, PruefStud_punktzahl = ?  WHERE PK_PruefStudnr=?");
-        $stmt->bind_param("iiid", $studentId,$present,$score,$scoreId);
+        $stmt->bind_param("iiid", $studentId, $present, $score, $scoreId);
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }

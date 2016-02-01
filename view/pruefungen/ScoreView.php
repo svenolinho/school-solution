@@ -94,6 +94,7 @@ OVERVIEW;
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="score">Erreichte Punktzahl</label>
+                            <span class="glyphicon glyphicon-info-sign control-label" data-toggle="tooltip" title="Muss kleiner sein als die maximale Punktzahl" data-placement="top"></span>
                             <input type="text" name="score" id="score" class="form-control">
                         </div>
                     </div>
@@ -133,6 +134,7 @@ NEWSCORE;
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="score">Erreichte Punktzahl</label>
+                            <span class="glyphicon glyphicon-info-sign control-label" data-toggle="tooltip" title="Muss kleiner sein als die maximale Punktzahl" data-placement="top"></span>
                             <input type="text" name="score" id="score" class="form-control">
                         </div>
                     </div>

@@ -7,28 +7,35 @@ include_once 'view/View.php';
 include_once 'view/studenten/StudentsListView.php';
 include_once 'view/studenten/ShowStudentsNotes.php';
 
-class StudentController extends Controller {
+class StudentController extends Controller
+{
 
     private $mysqlAdapter;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->mysqlAdapter = new MySqlAdapter(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
     }
 
-    protected function create() {
-        $firstName = $_POST['firstname'];
-        $lastName = $_POST['lastname'];
-        $email = $_POST['email'];
-        $phone = $_POST['phone'];
-        $klasse = $_POST['klasse'];
-        if (!is_numeric($klasse)) {
+    protected function create()
+    {
+        $firstName = filter_input(INPUT_POST, 'firstname', FILTER_DEFAULT);
+        $lastName = filter_input(INPUT_POST, 'lastname', FILTER_DEFAULT);
+        $email = filter_input(INPUT_POST, 'email', FILTER_DEFAULT);
+        $phone = filter_input(INPUT_POST, 'phone', FILTER_DEFAULT);
+        $klasse = filter_input(INPUT_POST, 'klasse', FILTER_VALIDATE_INT);
+        if (!$firstName || !$lastName || !$email || !$phone) {
+            throw new Exception("form manipulation");
+        }
+        if (!$klasse) {
             $klasse = NULL;
         }
         $this->mysqlAdapter->addStudent($firstName, $lastName, $email, $phone, $klasse);
         header("Location: " . URI_STUDENTEN);
     }
 
-    protected function index() {
+    protected function index()
+    {
         $studentList = $this->mysqlAdapter->getStudents();
         $classList = $this->mysqlAdapter->getSchoolclasses();
 
@@ -38,15 +45,18 @@ class StudentController extends Controller {
         $view->display();
     }
 
-    protected function init() {
+    protected function init()
+    {
         include_once 'view/studentForm.php';
     }
 
-    protected function show() {
-        
+    protected function show()
+    {
+
     }
 
-    protected function showNotes() {
+    protected function showNotes()
+    {
 
         $id = $_GET['id'];
         $notes = $this->mysqlAdapter->getStudent($id);
@@ -55,26 +65,33 @@ class StudentController extends Controller {
         $view->display();
     }
 
-    protected function delete() {
+    protected function delete()
+    {
         $id = $_GET['id'];
         $this->mysqlAdapter->deleteStudent($id);
         header("Location: " . URI_STUDENTEN);
     }
 
-    protected function edit() {
-        $id = $_POST['student-id'];
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $email = $_POST['email'];
-        $phone = $_POST['phone'];
-        $klasse = $_POST['klasse'];
-        $note = $_POST['note'];
-        if (!is_numeric($klasse)) {
-            $klasse = NULL;
+    protected function edit()
+    {
+        $id = filter_input(INPUT_POST, 'student-id', FILTER_VALIDATE_INT);
+        if(!$id){
+            throw new Exception('manipulation');
         }
-
-
-        $this->mysqlAdapter->editStudent($id, $firstname, $lastname, $email, $phone, $klasse, $note);
+        if (preg_match("@^.*/edit-note@", $_SERVER['REQUEST_URI'])) {
+            $note = filter_input(INPUT_POST, 'note', FILTER_DEFAULT);
+            $this->mysqlAdapter->editStudentNote($id, $note);
+        } else {
+            $firstname = filter_input(INPUT_POST, 'firstname', FILTER_DEFAULT);
+            $lastname = filter_input(INPUT_POST, 'lastname', FILTER_DEFAULT);
+            $email = filter_input(INPUT_POST, 'email', FILTER_DEFAULT);
+            $phone = filter_input(INPUT_POST, 'phone', FILTER_DEFAULT);
+            $klasse = filter_input(INPUT_POST, 'klasse', FILTER_VALIDATE_INT);
+            if(!$firstname || !$lastname || !$email || !$phone ){
+                throw new Exception('manipulation');
+            }
+            $this->mysqlAdapter->editStudent($id, $firstname, $lastname, $email, $phone, $klasse);
+        }
         header("Location: " . URI_STUDENTEN);
     }
 

@@ -4,9 +4,15 @@ $( document ).ready(function() {
         $("tr[data-edit-hidden]").show();
         $("tr[data-schoolclass-row]").hide();
     };
-  $("a[data-toggle=schoolclass-submit").click(function(e){
+  $("a[data-toggle=schoolclass-submit]").click(function(e) {
       e.preventDefault();
-      $("form[name=school-form]").submit();
+      var form = $("form[name=school-form]");
+      var schoolClassInput = form.find("input[name=schoolclass]");
+      if (!schoolClassInput.val().length) {
+          schoolClassInput.closest("div.form-group").addClass("has-error");
+      } else {
+        form.submit();
+      }
   });
   
   $("tr[data-toggle=schoolclass-row] td a[data-toggle=schoolclass-start-edit]").click(function(e){

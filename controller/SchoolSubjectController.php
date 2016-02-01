@@ -16,7 +16,10 @@ class SchoolSubjectController extends Controller {
     }
 
     protected function create() {
-        $subjectName = $_POST['schoolsubject'];
+        $subjectName = filter_input(INPUT_POST, 'schoolsubject', FILTER_DEFAULT);
+        if(!$subjectName){
+            throw new Exception('manipulation');
+        }
         $this->mysqlAdapter->addSchoolSubject($subjectName);
         header("Location: ".URI_FAECHER);
     }
@@ -28,8 +31,11 @@ class SchoolSubjectController extends Controller {
     }
 
     protected function edit() {
-        $id = $_POST['schoolsubject-id'];
-        $subjectName = $_POST['schoolsubject'];
+        $id = filter_input(INPUT_POST, 'schoolsubject-id', FILTER_VALIDATE_INT);
+        $subjectName = filter_input(INPUT_POST, 'schoolsubject', FILTER_DEFAULT);
+        if(!$id || !$subjectName){
+            throw new Exception('manipulation');
+        }
         $this->mysqlAdapter->editSchoolSubject($id, $subjectName);
         header("Location: ".URI_FAECHER);
     }

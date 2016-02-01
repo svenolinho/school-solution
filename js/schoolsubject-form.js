@@ -6,7 +6,13 @@ $( document ).ready(function() {
     };
   $("a[data-toggle=schoolsubject-submit").click(function(e){
       e.preventDefault();
-      $("form[name=school-form]").submit();
+      var form = $("form[name=school-form]");
+      var schoolSubjectInput = form.find("input[name=schoolsubject]");
+      if (!schoolSubjectInput.val().length) {
+          schoolSubjectInput.closest("div.form-group").addClass("has-error");
+      } else {
+          form.submit();
+      }
   });
   
   $("tr[data-toggle=schoolsubject-row] td a[data-toggle=schoolsubject-start-edit]").click(function(e){

@@ -37,7 +37,10 @@ class SchoolClassController extends Controller {
     }
 
     protected function create() {
-        $classname = $_POST['schoolclass'];
+        $classname = filter_input(INPUT_POST, 'schoolclass', FILTER_DEFAULT);
+        if(!$classname){
+            throw new Exception('manipulation');
+        }
         $this->mysqlAdapter->addSchoolclass($classname);
         header("Location: " . URI_KLASSEN);
     }
@@ -52,11 +55,22 @@ class SchoolClassController extends Controller {
         $view->display();
     }
 
-    protected function edit() {
-        $id = $_POST['schoolclass-id'];
-        $classname = $_POST['schoolclass'];
-        $note = $_POST['note'];
-        $this->mysqlAdapter->editSchoolclass($id, $classname, $note);
+    protected function edit()
+    {
+        $id = filter_input(INPUT_POST, 'schoolclass-id', FILTER_VALIDATE_INT);
+        if(!$id){
+            throw new Exception('manipulation');
+        }
+        if (preg_match("@^.*/edit-note@", $_SERVER['REQUEST_URI'])) {
+            $note = filter_input(INPUT_POST, 'note', FILTER_DEFAULT);
+            $this->mysqlAdapter->editSchoolclassNote($id, $note);
+        } else {
+            $classname = filter_input(INPUT_POST, 'schoolclass', FILTER_DEFAULT);
+            if (!$classname) {
+                throw new Exception('manipulation');
+            }
+            $this->mysqlAdapter->editSchoolclass($id, $classname);
+        }
         header("Location: " . URI_KLASSEN);
     }
 

@@ -17,7 +17,6 @@ $(document).ready(function () {
         var scoreInput = form.find("input[name=score]");
         var score = scoreInput.val();
         var maxScore = $("[data-max-score]").data("max-score");
-        debugger;
         if(score > maxScore){
             var row = scoreInput.closest("div.form-group");
             row.toggleClass("has-error");
