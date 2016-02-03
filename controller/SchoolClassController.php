@@ -38,7 +38,7 @@ class SchoolClassController extends Controller {
 
     protected function create() {
         $classname = filter_input(INPUT_POST, 'schoolclass', FILTER_DEFAULT);
-        if(!$classname){
+        if(!$classname || !preg_match('@^B\d{2}[a-zA-Z]{2}\d\.\d$@',$classname)){
             throw new Exception('manipulation');
         }
         $this->mysqlAdapter->addSchoolclass($classname);
@@ -66,7 +66,7 @@ class SchoolClassController extends Controller {
             $this->mysqlAdapter->editSchoolclassNote($id, $note);
         } else {
             $classname = filter_input(INPUT_POST, 'schoolclass', FILTER_DEFAULT);
-            if (!$classname) {
+            if (!$classname || !preg_match('@B\d{2}[a-zA-Z]{2}\d\.\d$@',$classname)) {
                 throw new Exception('manipulation');
             }
             $this->mysqlAdapter->editSchoolclass($id, $classname);

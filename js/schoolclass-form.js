@@ -8,7 +8,7 @@ $( document ).ready(function() {
       e.preventDefault();
       var form = $("form[name=school-form]");
       var schoolClassInput = form.find("input[name=schoolclass]");
-      if (!schoolClassInput.val().length) {
+      if (!schoolClassInput.val().length || !/^B\d{2}[a-zA-Z]{2}\d\.\d$/.test(schoolClassInput.val())) {
           schoolClassInput.closest("div.form-group").addClass("has-error");
       } else {
         form.submit();

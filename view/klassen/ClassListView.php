@@ -41,7 +41,13 @@ class ClassListView extends View {
         }
 
         echo "<tr data-schoolclass-row style=\"display:none\">";
-        echo "<td><div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"schoolclass\"></div>";
+        echo "<td>";
+        echo "<div class=\"form-group\">";
+        echo "<div class=\"input-group\">";
+        echo "<input type=\"text\" class=\"form-control\" name=\"schoolclass\">";
+        echo "<div class=\"input-group-addon\"><span class=\"glyphicon glyphicon-info-sign control-label\" data-toggle=\"tooltip\" title=\"Muss folgendes Format besitzten: B[Jahrgang][Studiengang][Semester].[Klasse] (z.B. B15if5.1)\" data-placement=\"top\"></span></div>";
+        echo "</div>";
+        echo "</div>";
         echo "<input type=\"hidden\" name=\"schoolclass-id\">";
         echo "</td>";
         echo "<td><a class=\"btn btn-danger\" data-toggle=\"schoolclass-abort\"><span class=\"glyphicon glyphicon-remove\"></td>";

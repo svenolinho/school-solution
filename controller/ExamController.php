@@ -131,7 +131,7 @@ class ExamController extends Controller {
     }
 
     protected function showNotes() {
-        $id = $_GET['id'];
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $notes = $this->mysqlAdapter->getExam($id);
         $view = new ShowExamNotes();
         $view->assign1('notes', $notes);
