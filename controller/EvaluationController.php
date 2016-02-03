@@ -1,7 +1,7 @@
 <?php
 
 include_once 'controller/Controller.php';
-include_once 'model/Evaluation.php';
+include_once 'model/SchoolClass.php';
 include_once 'lib/MySqlAdapter.php';
 include_once 'view/auswertung/EvaluationView.php';
 
@@ -27,8 +27,8 @@ class EvaluationController extends Controller {
 
     protected function index() {
         $view = new EvaluationView();
+        $view->assign1("classList",$this->mysqlAdapter->getSchoolclasses());
         $view->display();
-        
     }
 
     protected function init() {

@@ -411,5 +411,20 @@ class MySqlAdapter
             echo "Error: <br>" . mysqli_error($this->con);
         }
     }
+    public function getScoresForSchoolClass($schoolClassId)
+    {
+        include_once 'model/Exam.php';
+        include_once 'model/Score.php';
+        $schoolClassId = $this->con->real_escape_string($schoolClassId);
+        $scores = array();
+        $res = $this->con->query("SELECT * FROM pruefung_student LEFT JOIN pruefungen ON PruefStud_pruefung = pruefungen.PK_Pruefnr WHERE PRUEF_klasse = $schoolClassId");
+        while (($row = $res->fetch_assoc())) {
+            $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
+            $score = new Score($row['PK_PruefStudnr'], $exam, NULL, boolval($row['PruefStud_anwesend']), $row['PruefStud_punktzahl']);
+            $scores[] = $score;
+        }
+        $res->free();
+        return $scores;
+    }
 
 }

@@ -11,8 +11,6 @@ class StudentsListView extends View {
 
         $url = URI_STUDENTEN;
 
-
-
         echo "<div class=\"panel panel-default\">";
         echo "<div class =\"panel-heading\">";
         echo "<h4>Studenten<a data-toggle=\"student-start-new\" class=\"btn\"><span class=\"glyphicon glyphicon-plus\"></span></a></h5>";

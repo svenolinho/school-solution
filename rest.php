@@ -6,6 +6,10 @@ switch (getCurrentURI()) {
         include_once 'rest/controller/ExamRestController.php';
         $controller = new ExamRestController();
         break;
+    case URI_AUSWERTUNG:
+        include_once 'rest/controller/EvaluationRestController.php';
+        $controller = new EvaluationRestController();
+        break;
     default:
         exit;
 }
@@ -20,6 +24,7 @@ function getResource()
 {
     return array(
         URI_PRUEFUNGEN => 'Prüfungen',
+        URI_AUSWERTUNG => 'Auswertung',
     );
 }
 
@@ -33,7 +38,7 @@ function getCurrentURI()
         return $_SERVER['REQUEST_URI'];
     } else {
         foreach (array_keys(getResource()) as $href) {
-            if (preg_match("@^$href@", $_SERVER['REQUEST_URI'])) {
+            if (preg_match("@^/rest$href@", $_SERVER['REQUEST_URI'])) {
                 return $href;
             }
         }
