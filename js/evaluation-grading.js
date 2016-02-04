@@ -1,57 +1,88 @@
 google.charts.load('current', {packages: ['corechart', 'bar']});
-google.charts.setOnLoadCallback(drawBasic);
+google.charts.setOnLoadCallback(loadAndDraw);
 
-function drawBasic() {
+var loadedData = [];
+
+function drawChart(preparedData, roundFactor) {
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'Note');
+    data.addColumn('number', 'Anzahl');
+    data.addRows(preparedData);
+
+    var ticks = [];
+    for (i = 1; i <= (6 * roundFactor); i++) {
+        ticks[i - 1] = i / (6 * roundFactor) * 6;
+    }
+    var number = 1 / roundFactor;
+    var options = {
+        title: 'Notenverteilung',
+        hAxis: {
+            title: 'Note',
+            ticks: ticks,
+            viewWindow: {
+                min: [1 - (1 / roundFactor) / 2],
+                max: [6 + (1 / roundFactor) / 2]
+            },
+            textStyle: {
+                fontSize: 12 - (roundFactor / 10) * 5
+            }
+        },
+        vAxis: {
+            title: 'Anzahl'
+        },
+        legend: {
+            position: 'none'
+        }
+    };
+
+    var chart = new google.visualization.ColumnChart(
+        document.getElementById('chart_div'));
+
+    chart.draw(data, options);
+};
+
+function loadData() {
 
     var selectedClassOption = $("select[name=schoolclass] option:selected");
 
-    function prepareChartsData(jsonData) {
-        var withStatistic = jsonData.reduce(function (last, current) {
-            last[current] = (current in last) ? last[current] + 1 : 1;
-            return last;
-        }, {});
-        return $.map(withStatistic,function(element,index){
-            return [[parseFloat(index),parseInt(element)]];
-        }).sort(function(array,other){
-            return array[0]-other[0];
-        });
-    }
-
     if (selectedClassOption.length && selectedClassOption.val().length) {
         var jsonData = JSON.parse($.ajax({
-            url: "/rest/evaluation?schoolclassId=" + selectedClassOption.val(),
+            url: "/rest/evaluation?action=scores&schoolclassId=" + selectedClassOption.val(),
             dataType: "json",
             async: false
         }).responseText);
 
-        var preparedData = prepareChartsData(jsonData);
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Note');
-        data.addColumn('number', 'Anzahl');
-        data.addRows(preparedData);
-
-        var options = {
-            title: 'Notenverteilung',
-            hAxis: {
-                title: 'Note',
-                ticks: [1, 2, 3, 4, 5, 6],
-                viewWindow: {
-                    min: [0.5],
-                    max: [6.5]
-                }
-            },
-            vAxis: {
-                title: 'Anzahl'
-            }
-        };
-
-        var chart = new google.visualization.ColumnChart(
-            document.getElementById('chart_div'));
-
-        chart.draw(data, options);
+        return jsonData;
     }
-
 };
+
+function prepareChartsData(jsonData, factor) {
+    var withStatistic = jsonData.reduce(function (last, current) {
+        current = Math.round(current*factor)/factor;
+        last[current] = (current in last) ? last[current] + 1 : 1;
+        return last;
+    }, {});
+    return $.map(withStatistic,function(element,index){
+        return [[parseFloat(index),parseInt(element)]];
+    }).sort(function(array,other){
+        return array[0]-other[0];
+    });
+};
+
+function loadAndDraw(){
+    var roundFactor = $("select[name=roundFactor] option:selected").val();
+    loadedData = loadData(roundFactor);
+    var preparedData = prepareChartsData(loadedData,roundFactor);
+    drawChart(preparedData,roundFactor);
+}
+
+function drawWithDifferentFactor(){
+    var roundFactor = $("select[name=roundFactor] option:selected").val();
+    var preparedData = prepareChartsData(loadedData,roundFactor);
+    drawChart(preparedData,roundFactor);
+}
+
 $(document).ready(function () {
-    $("select[name=schoolclass]").change(drawBasic);
+    $("select[name=schoolclass]").change(loadAndDraw);
+    $("select[name=roundFactor]").change(drawWithDifferentFactor);
 });

@@ -6,23 +6,23 @@ include_once 'index.php';
 class EvaluationView extends View {
 
     public function display() {
-        $classOptionList = "";
-        foreach ($this->vars['classList'] as $klasse) {
-            $classOptionList .= "<option value=\"" . $klasse->getId() . "\">" . $klasse->getName() . "</option>";
-        }
+        $baseUrl = URI_AUSWERTUNG;
 
-        echo <<<EVALUATIONCLASSVIEW
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="/js/evaluation-grading.js"></script>
-    <h1>Notenverteilung</h1>
-    <div class="form-group">
-        <select class="form-control" name="schoolclass">
-          {$classOptionList}
-        </select>
+        echo <<<EVALUATIONCHOOSER
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="evaluationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Auswertung <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="evaluationMenu">
+            <li class="dropdown-header">Klassen</li>
+            <li><a href="$baseUrl/distribution">Notenverteilung</a></li>
+            <li><a href="$baseUrl/average">Entwicklung Notendurchschnitt</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">Studenten</li>
+            <li><a href="#">TODO</a></li>
+        </ul>
     </div>
-    <div id="chart_div"></div>
 
-EVALUATIONCLASSVIEW;
+EVALUATIONCHOOSER;
 
     }
 

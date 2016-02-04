@@ -15,18 +15,11 @@ class EvaluationRestController extends RestController
     {
         header("Content-Type: application/javascript");
         $schoolclassId = filter_input(INPUT_GET, 'schoolclassId', FILTER_DEFAULT);
-        if($schoolclassId){
-            $scores = $this->mysqlAdapter->getScoresForSchoolClass($schoolclassId);
-            $count = count($scores);
-            echo "[";
-            $i = 0;
-            foreach ($scores as $score) {
-                echo "\"".$score->getEvaluatedScore()."\"";
-                if(++$i !== $count) {
-                    echo ",";
-                }
-            }
-            echo "]";
+        $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
+        if($schoolclassId && $action === "scores"){
+            $this->displayScores($schoolclassId);
+        } else if($schoolclassId && $action === "scoreAverages"){
+            $this->displayScoreAverages($schoolclassId);
         } else {
             http_response_code(400);
         }
@@ -35,5 +28,49 @@ class EvaluationRestController extends RestController
     protected function post()
     {
         // empty
+    }
+
+    private function reduceToExams($scores){
+        $grouped = array();
+        foreach ($scores as $score) {
+            $grouped[$score->getExam()->getId()]=$score->getExam();
+        }
+        return $grouped;
+    }
+
+    protected function displayScores($schoolclassId)
+    {
+        $scores = $this->mysqlAdapter->getScoresForSchoolClass($schoolclassId);
+        $count = count($scores);
+        echo "[";
+        $i = 0;
+        foreach ($scores as $score) {
+            echo "\"" . $score->getEvaluatedScore() . "\"";
+            if (++$i !== $count) {
+                echo ",";
+            }
+        }
+        echo "]";
+    }
+
+    protected function displayScoreAverages($schoolclassId)
+    {
+        $scores = $this->mysqlAdapter->getScoresForSchoolClass($schoolclassId);
+        $exams = $this->reduceToExams($scores);
+        $count = count($exams);
+        echo "[";
+        $i = 0;
+        foreach ($exams as $exam) {
+            echo "[";
+
+            echo "\"" . $exam->getDate() . "\",";
+            echo $exam->getAverageEvaluatedScore();
+            if (++$i !== $count) {
+                echo "],";
+            } else {
+                echo "]";
+            }
+        }
+        echo "]";
     }
 }

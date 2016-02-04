@@ -418,9 +418,16 @@ class MySqlAdapter
         $schoolClassId = $this->con->real_escape_string($schoolClassId);
         $scores = array();
         $res = $this->con->query("SELECT * FROM pruefung_student LEFT JOIN pruefungen ON PruefStud_pruefung = pruefungen.PK_Pruefnr WHERE PRUEF_klasse = $schoolClassId");
+        $exams = array();
         while (($row = $res->fetch_assoc())) {
-            $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
+            if(isset($exams[$row['PK_Pruefnr']])){
+                $exam = $exams[$row['PK_Pruefnr']];
+            }else {
+                $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
+            }
             $score = new Score($row['PK_PruefStudnr'], $exam, NULL, boolval($row['PruefStud_anwesend']), $row['PruefStud_punktzahl']);
+            $exam->addStudentScore($score);
+            $exams[$row['PK_Pruefnr']] = $exam;
             $scores[] = $score;
         }
         $res->free();

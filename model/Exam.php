@@ -99,4 +99,11 @@ class Exam {
         return $prettyClef;
     }
 
+    public function getAverageEvaluatedScore(){
+        $sum = 0;
+        foreach ($this->studentScores as $score) {
+            $sum += $score->getEvaluatedScore();
+        }
+        return $sum / count($this->studentScores);
+    }
 }
