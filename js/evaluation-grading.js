@@ -3,11 +3,11 @@ google.charts.setOnLoadCallback(loadAndDraw);
 
 var loadedData = [];
 
-function drawChart(preparedData, roundFactor) {
+function drawChart(roundFactor) {
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'Note');
     data.addColumn('number', 'Anzahl');
-    data.addRows(preparedData);
+    data.addRows(prepareChartsData(loadedData,roundFactor));
 
     var ticks = [];
     for (i = 1; i <= (6 * roundFactor); i++) {
@@ -39,16 +39,21 @@ function drawChart(preparedData, roundFactor) {
     chart.draw(data, options);
 };
 
-function loadData() {
+function loadAndDraw() {
 
     var selectedClassOption = $("select[name=schoolclass] option:selected");
 
     if (selectedClassOption.length && selectedClassOption.val().length) {
-        var jsonData = JSON.parse($.ajax({
+        var jsonData = $.ajax({
             url: "/rest/evaluation?action=scores&schoolclassId=" + selectedClassOption.val(),
-            dataType: "json",
-            async: false
-        }).responseText);
+            dataType: "json"
+        }).done(function (data, textStatus) {
+            loadedData = data;
+            var roundFactor = $("select[name=roundFactor] option:selected").val();
+            drawChart(roundFactor);
+        }).fail(function () {
+            alert("Es ist ein Fehler aufgetreten");
+        });
 
         return jsonData;
     }
@@ -67,17 +72,9 @@ function prepareChartsData(jsonData, factor) {
     });
 };
 
-function loadAndDraw(){
-    var roundFactor = $("select[name=roundFactor] option:selected").val();
-    loadedData = loadData(roundFactor);
-    var preparedData = prepareChartsData(loadedData,roundFactor);
-    drawChart(preparedData,roundFactor);
-}
-
 function drawWithDifferentFactor(){
     var roundFactor = $("select[name=roundFactor] option:selected").val();
-    var preparedData = prepareChartsData(loadedData,roundFactor);
-    drawChart(preparedData,roundFactor);
+    drawChart(roundFactor);
 }
 
 $(document).ready(function () {
