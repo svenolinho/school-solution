@@ -14,7 +14,7 @@ class EvaluationView extends View {
         </button>
         <ul class="dropdown-menu" aria-labelledby="evaluationMenu">
             <li class="dropdown-header">Klassen</li>
-            <li><a href="$baseUrl/distribution">Notenverteilung</a></li>
+            <li><a href="$baseUrl/distribution">Notenverteilung/Noten</a></li>
             <li><a href="$baseUrl/average">Entwicklung Notendurchschnitt</a></li>
             <li role="separator" class="divider"></li>
             <li class="dropdown-header">Studenten</li>

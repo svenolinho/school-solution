@@ -15,6 +15,7 @@ function drawChart(roundFactor) {
     }
     var number = 1 / roundFactor;
     var options = {
+        title: 'Notenverteilung',
         height:500,
         hAxis: {
             title: 'Note',
@@ -51,6 +52,7 @@ function loadAndDraw() {
             loadedData = data;
             var roundFactor = $("select[name=roundFactor] option:selected").val();
             drawChart(roundFactor);
+            fillTable();
         }).fail(function () {
             alert("Es ist ein Fehler aufgetreten");
         });
@@ -61,7 +63,7 @@ function loadAndDraw() {
 
 function prepareChartsData(jsonData, factor) {
     var withStatistic = jsonData.reduce(function (last, current) {
-        current = Math.round(current*factor)/factor;
+        current = Math.round(current["evaluatedScore"]*factor)/factor;
         last[current] = (current in last) ? last[current] + 1 : 1;
         return last;
     }, {});
@@ -75,6 +77,14 @@ function prepareChartsData(jsonData, factor) {
 function drawWithDifferentFactor(){
     var roundFactor = $("select[name=roundFactor] option:selected").val();
     drawChart(roundFactor);
+}
+
+function fillTable(){
+    var scoreTable = $("#scoreTable");
+    scoreTable.find("tbody").empty();
+    $.each(loadedData, function( index, value ){
+        scoreTable.append("<tr><td>"+value['evaluatedScore']+"</td><td>"+value['student']+"</td><td>"+value['date']+"</td><td>"+value['subject']+"</td></tr>")
+    });
 }
 
 $(document).ready(function () {

@@ -35,6 +35,17 @@ class EvaluationScoreDistributionView extends EvaluationView {
         </div>
     </form>
     <div id="chart_div"></div>
+    <h1>Noten</h1>
+    <table class="table" id="scoreTable">
+    <thead>
+        <th>Note</th>
+        <th>Student</th>
+        <th>Datum</th>
+        <th>Fach</th>
+    </thead>
+    <tbody>
+    </tbod>
+    </table>
 
 EVALUATIONCLASSVIEW;
 

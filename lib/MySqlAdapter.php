@@ -220,6 +220,7 @@ class MySqlAdapter
     {
         include_once 'model/Exam.php';
         include_once 'model/Student.php';
+        include_once 'model/SchoolSubject.php';
         include_once 'model/Score.php';
         $id = $this->con->real_escape_string($id);
         $res = $this->con->query("SELECT * FROM pruefungen LEFT JOIN fach ON PRUEF_fach = fach.PK_Fachnr LEFT JOIN klasse ON PRUEF_klasse = klasse.PK_Klassenr WHERE PK_Pruefnr = $id");
@@ -415,17 +416,21 @@ class MySqlAdapter
     {
         include_once 'model/Exam.php';
         include_once 'model/Score.php';
+        include_once 'model/Student.php';
+        include_once 'model/SchoolSubject.php';
         $schoolClassId = $this->con->real_escape_string($schoolClassId);
         $scores = array();
-        $res = $this->con->query("SELECT * FROM pruefung_student LEFT JOIN pruefungen ON PruefStud_pruefung = pruefungen.PK_Pruefnr WHERE PRUEF_klasse = $schoolClassId");
+        $res = $this->con->query("SELECT * FROM pruefung_student LEFT JOIN pruefungen ON PruefStud_pruefung = pruefungen.PK_Pruefnr LEFT JOIN student ON PruefStud_student = student.PK_Studnr LEFT JOIN fach ON PRUEF_fach = fach.PK_Fachnr WHERE PRUEF_klasse = $schoolClassId ORDER BY PRUEF_datum");
         $exams = array();
         while (($row = $res->fetch_assoc())) {
             if(isset($exams[$row['PK_Pruefnr']])){
                 $exam = $exams[$row['PK_Pruefnr']];
             }else {
-                $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
+                $subject = new SchoolSubject($row['PK_Fachnr'], $row['FACH_name']);
+                $exam = new Exam($row['PK_Pruefnr'], $subject, $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
             }
-            $score = new Score($row['PK_PruefStudnr'], $exam, NULL, boolval($row['PruefStud_anwesend']), $row['PruefStud_punktzahl']);
+            $student = new Student($row['PK_Studnr'], $row['STU_name'], $row['STU_vorname']);
+            $score = new Score($row['PK_PruefStudnr'], $exam, $student, boolval($row['PruefStud_anwesend']), $row['PruefStud_punktzahl']);
             $exam->addStudentScore($score);
             $exams[$row['PK_Pruefnr']] = $exam;
             $scores[] = $score;

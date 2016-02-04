@@ -31,6 +31,11 @@ class Score {
         return $this->student;
     }
 
+    public function getSubject()
+    {
+        return $this->exam->getSubject();
+    }
+
     public function getPresent()
     {
         return $this->present;

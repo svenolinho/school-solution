@@ -45,9 +45,17 @@ class EvaluationRestController extends RestController
         echo "[";
         $i = 0;
         foreach ($scores as $score) {
-            echo "\"" . $score->getEvaluatedScore() . "\"";
+            echo "{";
+            echo "\"evaluatedScore\": " . $score->getEvaluatedScore().",";
+            $student = $score->getStudent();
+            echo "\"student\": \"" . $student->getLastName() ." ".$student->getFirstName()."\",";
+            $date = new DateTime($score->getExam()->getDate());
+            echo "\"date\": \"" .$date->format("d.m.Y") ."\",";
+            echo "\"subject\": \"" .$score->getSubject()->getSubjectName() ."\"";
             if (++$i !== $count) {
-                echo ",";
+                echo "},";
+            }else{
+                echo "}";
             }
         }
         echo "]";
