@@ -24,6 +24,7 @@ class ScoreView extends View
         $url = URI_PRUEFUNGEN;
 
         $date = new DateTime($this->vars['exam']->getDate());
+        $roundedAverage = round($this->vars['exam']->getAverageEvaluatedScore(),2);
         echo <<<OVERVIEW
         <a href="$url" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Zurück</a>
         <h3>{$this->vars['exam']->getSubjectName()} Pr&uuml;fung vom {$date->format("d.m.Y")}</h3>
@@ -42,6 +43,10 @@ class ScoreView extends View
         <div class="row">
             <div class="col-md-2">Maximale Punktzahl</div>
             <div class="col-md-10" data-max-score="{$this->vars['exam']->getMaxScore()}">{$this->vars['exam']->getMaxScore()}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">Notendurchschnitt</div>
+            <div class="col-md-10">{$roundedAverage}</div>
         </div>
         <div class="panel panel-default">
         <div class="panel-heading">

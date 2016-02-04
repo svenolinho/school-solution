@@ -100,6 +100,9 @@ class Exam {
     }
 
     public function getAverageEvaluatedScore(){
+        if(count($this->studentScores)<1){
+            return 0;
+        }
         $sum = 0;
         foreach ($this->studentScores as $score) {
             $sum += $score->getEvaluatedScore();

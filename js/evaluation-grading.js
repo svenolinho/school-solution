@@ -15,7 +15,7 @@ function drawChart(preparedData, roundFactor) {
     }
     var number = 1 / roundFactor;
     var options = {
-        title: 'Notenverteilung',
+        height:500,
         hAxis: {
             title: 'Note',
             ticks: ticks,
@@ -30,9 +30,7 @@ function drawChart(preparedData, roundFactor) {
         vAxis: {
             title: 'Anzahl'
         },
-        legend: {
-            position: 'none'
-        }
+        legend: 'none'
     };
 
     var chart = new google.visualization.ColumnChart(

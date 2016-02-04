@@ -57,14 +57,20 @@ class EvaluationRestController extends RestController
     {
         $scores = $this->mysqlAdapter->getScoresForSchoolClass($schoolclassId);
         $exams = $this->reduceToExams($scores);
+        usort($exams, function($a,$b){
+            $t1 = strtotime($a->getDate());
+            $t2 = strtotime($b->getDate());
+            return ($t1 - $t2);
+        });
         $count = count($exams);
         echo "[";
         $i = 0;
         foreach ($exams as $exam) {
             echo "[";
 
-            echo "\"" . $exam->getDate() . "\",";
-            echo $exam->getAverageEvaluatedScore();
+            $date = new DateTime($exam->getDate());
+            echo "\"" . $date->format("Y-m-d") . "\",";
+            echo round($exam->getAverageEvaluatedScore(),4);
             if (++$i !== $count) {
                 echo "],";
             } else {
