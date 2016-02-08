@@ -20,6 +20,8 @@ class EvaluationRestController extends RestController
             $this->displayScores($schoolclassId);
         } else if($schoolclassId && $action === "scoreAverages"){
             $this->displayScoreAverages($schoolclassId);
+        } else if($action === "scoreComparison"){
+            $this->displayScoreComparison();
         } else {
             http_response_code(400);
         }
@@ -30,7 +32,7 @@ class EvaluationRestController extends RestController
         // empty
     }
 
-    private function reduceToExams($scores){
+    private function groupByExams($scores){
         $grouped = array();
         foreach ($scores as $score) {
             $grouped[$score->getExam()->getId()]=$score->getExam();
@@ -64,7 +66,7 @@ class EvaluationRestController extends RestController
     protected function displayScoreAverages($schoolclassId)
     {
         $scores = $this->mysqlAdapter->getScoresForSchoolClass($schoolclassId);
-        $exams = $this->reduceToExams($scores);
+        $exams = $this->groupByExams($scores);
         usort($exams, function($a,$b){
             $t1 = strtotime($a->getDate());
             $t2 = strtotime($b->getDate());
@@ -86,5 +88,69 @@ class EvaluationRestController extends RestController
             }
         }
         echo "]";
+    }
+
+    private function displayScoreComparison()
+    {
+        $classes = filter_input(INPUT_GET, 'classes', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+        $subjects = filter_input(INPUT_GET, 'subjects', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+        $scoresBySubjectAndClass = $this->mysqlAdapter->getScoresBySubjectAndClass($subjects, $classes);
+
+        echo "{";
+        echo "\"cols\": [{\"id\": \"fach\", \"label\": \"Fach\", \"type\":\"string\"},";
+        $schoolClasses = $this->mysqlAdapter->getSchoolclasses();
+        $classCount = count($classes);
+        $i = 0;
+        foreach ($classes as $classId) {
+            $schoolClass = $this->getById($classId, $schoolClasses);
+            echo sprintf("{\"id\":\"id-%d\", \"label\": \"%s\", \"type\":\"number\"}", $classId, $schoolClass->getName());
+            if (++$i !== $classCount) {
+                echo ",";
+            }
+        }
+        echo "],";
+
+        echo "\"rows\": [";
+        $schoolSubjects = $this->mysqlAdapter->getSchoolSubjects();
+        $subjectCount = count($subjects);
+        $i = 0;
+        foreach ($subjects as $subjectId) {
+            $schoolSubject = $this->getById($subjectId, $schoolSubjects);
+            echo "{\"c\":[{\"v\": \"".$schoolSubject->getSubjectName()."\"}";
+            foreach ($classes as $classId) {
+                $averageScore = 0;
+                if(isset($scoresBySubjectAndClass[$subjectId]) && isset($scoresBySubjectAndClass[$subjectId][$classId])){
+                    $averageScore = $this->getAverageScore($scoresBySubjectAndClass[$subjectId][$classId]);
+                }
+                echo sprintf(",{\"v\": %f}",$averageScore);
+            }
+            echo "]}";
+            if (++$i !== $subjectCount) {
+                echo ",";
+            }
+        }
+        echo "]";
+        echo "}";
+    }
+
+    private function getById($id, $schoolSubjects){
+        foreach ($schoolSubjects as $subject) {
+            if($id == $subject->getId()){
+                return $subject;
+            }
+        }
+        return NULL;
+    }
+
+    private function getAverageScore($scoresByClass)
+    {
+        if(count($scoresByClass)<1){
+            return 0;
+        }
+        $sum = 0;
+        foreach ($scoresByClass as $score) {
+            $sum += $score->getEvaluatedScore();
+        }
+        return $sum / count($scoresByClass);
     }
 }

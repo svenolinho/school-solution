@@ -439,4 +439,37 @@ class MySqlAdapter
         return $scores;
     }
 
+    public function getScoresBySubjectAndClass($subjects, $classes)
+    {
+        include_once 'model/Exam.php';
+        include_once 'model/Score.php';
+        include_once 'model/SchoolSubject.php';
+        include_once 'model/SchoolClass.php';
+
+        $scoresBySubjectAndClass = array();
+        $exams = array();
+        foreach ($subjects as $subject) {
+            foreach ($classes as $class) {
+                $res = $this->con->query("SELECT * FROM pruefung_student LEFT JOIN pruefungen ON PruefStud_pruefung = pruefungen.PK_Pruefnr WHERE PRUEF_fach = $subject AND PRUEF_klasse = $class");
+                while (($row = $res->fetch_assoc())) {
+                    $examId = $row['PK_Pruefnr'];
+                    if(isset($exams[$examId])){
+                        $exam = $exams[$examId];
+                    }else {
+                        $exam = new Exam($examId, $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
+                    }
+                    $exams[$examId] = $exam;
+
+                    $score = new Score($row['PK_PruefStudnr'], $exam, NULL, boolval($row['PruefStud_anwesend']), $row['PruefStud_punktzahl']);
+                    $exam->addStudentScore($score);
+                    $scoresBySubjectAndClass[$subject][$class][]=$score;
+                }
+            }
+        }
+
+        return $scoresBySubjectAndClass;
+
+    }
+
+
 }

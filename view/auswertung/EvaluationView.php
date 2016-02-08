@@ -16,6 +16,7 @@ class EvaluationView extends View {
             <li class="dropdown-header">Klassen</li>
             <li><a href="$baseUrl/distribution">Notenverteilung/Noten</a></li>
             <li><a href="$baseUrl/average">Entwicklung Notendurchschnitt</a></li>
+            <li><a href="$baseUrl/comparison">Vergleich</a></li>
             <li role="separator" class="divider"></li>
             <li class="dropdown-header">Studenten</li>
             <li><a href="#">TODO</a></li>
