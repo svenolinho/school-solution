@@ -22,6 +22,7 @@ class EvaluationScoreComparisonView extends EvaluationView {
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="/js/evaluation-comparison.js"></script>
     <h1>Vergleich</h1>
+    <p>Der "Notenschnitt gesamt" ist der Schnitt über alle Noten der Klasse im Fach und nicht der Schnitt der Notenschnitte.</p>
     <form>
         <div class="form-group">
             {$classesInput}
