@@ -325,7 +325,7 @@ class MySqlAdapter
     public function getExams()
     {
         $exams = array();
-        $res = $this->con->query("SELECT * FROM pruefungen LEFT JOIN fach ON PRUEF_fach = fach.PK_Fachnr LEFT JOIN klasse ON PRUEF_klasse = klasse.PK_Klassenr ORDER BY PRUEF_datum");
+        $res = $this->con->query("SELECT * FROM pruefungen LEFT JOIN fach ON PRUEF_fach = fach.PK_Fachnr LEFT JOIN klasse ON PRUEF_klasse = klasse.PK_Klassenr ORDER BY PRUEF_datum DESC");
         while ($row = $res->fetch_assoc()) {
             $subject = new SchoolSubject($row['PK_Fachnr'], $row['FACH_name']);
             $class = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
