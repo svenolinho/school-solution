@@ -15,6 +15,7 @@ class EvaluationRestController extends RestController
     {
         header("Content-Type: application/javascript");
         $schoolclassId = filter_input(INPUT_GET, 'schoolclassId', FILTER_DEFAULT);
+        $studentId = filter_input(INPUT_GET, 'studentId', FILTER_DEFAULT);
         $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
         if($schoolclassId && $action === "scores"){
             $this->displayScores($schoolclassId);
@@ -22,6 +23,8 @@ class EvaluationRestController extends RestController
             $this->displayScoreAverages($schoolclassId);
         } else if($action === "scoreComparison"){
             $this->displayScoreComparison();
+        } else if($studentId && $action === "studentScores"){
+            $this->displayStudentScores($studentId);
         } else {
             http_response_code(400);
         }
@@ -152,5 +155,28 @@ class EvaluationRestController extends RestController
             $sum += $score->getEvaluatedScore();
         }
         return $sum / count($scoresByClass);
+    }
+
+    private function displayStudentScores($studentId)
+    {
+        $scores = $this->mysqlAdapter->getStudentScores($studentId);
+        $count = count($scores);
+        echo "[";
+        $i = 0;
+        foreach ($scores as $score) {
+            echo "{";
+            echo "\"id\": " . $score->getId().",";
+            echo "\"evaluatedScore\": " . $score->getEvaluatedScore().",";
+            $date = new DateTime($score->getExam()->getDate());
+            echo "\"date\": \"" .$date->format("Y-m-d") ."\",";
+            echo "\"subjectId\": " .$score->getExam()->getSubject()->getId() .",";
+            echo "\"subject\": \"" .$score->getSubject()->getSubjectName() ."\"";
+            if (++$i !== $count) {
+                echo "},";
+            }else{
+                echo "}";
+            }
+        }
+        echo "]";
     }
 }

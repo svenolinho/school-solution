@@ -19,7 +19,7 @@ class EvaluationView extends View {
             <li><a href="$baseUrl/comparison">Vergleich</a></li>
             <li role="separator" class="divider"></li>
             <li class="dropdown-header">Studenten</li>
-            <li><a href="#">TODO</a></li>
+            <li><a href="$baseUrl/studentScores">Notendurchschnitt/Noten</a></li>
         </ul>
     </div>
 
