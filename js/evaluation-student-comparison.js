@@ -5,9 +5,6 @@ $(document).ready(function () {
     var options = {
         title: 'Vergleich von Notenschnitt der Studenten',
         height: 500,
-        hAxis: {
-            title: 'Fächer',
-        },
         vAxis: {
             title: 'Notenschnitt gesamt',
             viewWindow: {
