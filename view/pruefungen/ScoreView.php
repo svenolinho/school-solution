@@ -71,7 +71,7 @@ OVERVIEW;
         $url = URI_PRUEFUNGEN;
 
         $studentsOptionHtml ="";
-        foreach($this->vars['students'] as $student) {
+        foreach($this->vars['studentsWithoutScore'] as $student) {
             $studentsOptionHtml .="<option value=\"{$student->getId()}\">{$student->getLastName()} {$student->getFirstName()}</option>)";
         }
 

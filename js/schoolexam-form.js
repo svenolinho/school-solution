@@ -16,22 +16,28 @@ $(document).ready(function () {
         form.find("div.form-group").removeClass("has-error");
         var dateInput = form.find("input[name=date]");
         var schoolClass = form.find("select[name=schoolClass]");
+        var hasError = false;
         if(!form.find("option:selected").length){
             schoolClass.closest("div.form-group").addClass("has-error");
+            hasError = true;
         }
         var subject = form.find("select[name=subject]");
         if(!form.find("option:selected").length){
             subject.closest("div.form-group").addClass("has-error");
+            hasError = true;
         }
         if(!dateInput.val()){
             dateInput.closest("div.form-group").addClass("has-error");
+            hasError = true;
         }
         var clefInput = form.find("input[name=clef]");
         var clef = clefInput.val();
         $.ajax({
             url: "/rest/exams/validateClef?clef="+encodeURIComponent(clef),
         }).done(function() {
-            form.submit();
+            if(!hasError){
+                form.submit();
+            }
         }).fail(function(){
             clefInput.closest("div.form-group").addClass("has-error");
         });

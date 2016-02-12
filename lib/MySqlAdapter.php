@@ -90,12 +90,13 @@ class MySqlAdapter
         return $list;
     }
 
-    public function getStudentsOfClass($classId)
+    public function getStudentsOfClassWithoutScoresForExam($classId,$examId)
     {
         include_once 'model/SchoolClass.php';
         $list = array();
         $classId = $this->con->real_escape_string($classId);
-        $res = $this->con->query("SELECT * FROM student LEFT JOIN klasse ON student.STU_klasse=klasse.PK_Klassenr WHERE STU_klasse = ".$classId." ORDER BY STU_name");
+        $examId = $this->con->real_escape_string($examId);
+        $res = $this->con->query("SELECT * FROM student LEFT JOIN klasse ON student.STU_klasse=klasse.PK_Klassenr WHERE STU_klasse = $classId AND PK_Studnr NOT IN (SELECT DISTINCT PruefStud_student FROM pruefung_student WHERE PruefStud_pruefung = $examId ) ORDER BY STU_name");
         while ($row = $res->fetch_assoc()) {
             $klasse = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
             $student = new Student($row['PK_Studnr'], $row['STU_name'], $row['STU_vorname'], $row['STU_mail'], $row['STU_telnr'], $row['STU_notiz'], $klasse);
@@ -395,7 +396,7 @@ class MySqlAdapter
     {
         $present = ($present ? 1 : 0);
         $stmt = $this->con->prepare("INSERT INTO pruefung_student (PruefStud_pruefung,PruefStud_student,PruefStud_anwesend,PruefStud_punktzahl) VALUES (?,?,?,?)");
-        $stmt->bind_param("iiii", $examId, $studentId, $present, $score);
+        $stmt->bind_param("iiid", $examId, $studentId, $present, $score);
 
         if ($stmt->execute()) {
 
@@ -428,7 +429,7 @@ class MySqlAdapter
     {
         $present = ($present ? 1 : 0);
         $stmt = $this->con->prepare("UPDATE pruefung_student SET PruefStud_student = ?, PruefStud_anwesend = ?, PruefStud_punktzahl = ?  WHERE PK_PruefStudnr=?");
-        $stmt->bind_param("iiid", $studentId, $present, $score, $scoreId);
+        $stmt->bind_param("iidi", $studentId, $present, $score, $scoreId);
         if (!$stmt->execute()) {
             echo "Error: <br>" . mysqli_error($this->con);
         }

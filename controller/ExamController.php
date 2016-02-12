@@ -123,10 +123,10 @@ class ExamController extends Controller {
 
     private function showExam($examId){
         $exam = $this->mysqlAdapter->getExamWithStudentScore($examId);
-        $students = $this->mysqlAdapter->getStudentsOfClass($exam->getSchoolClassId());
+        $students = $this->mysqlAdapter->getStudentsOfClassWithoutScoresForExam($exam->getSchoolClassId(),$examId);
         $view = new ScoreView();
         $view->assign1('exam', $exam);
-        $view->assign1('students', $students);
+        $view->assign1('studentsWithoutScore', $students);
         $view->display();
     }
 

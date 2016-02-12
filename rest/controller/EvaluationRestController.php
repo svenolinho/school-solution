@@ -165,7 +165,6 @@ class EvaluationRestController extends RestController
         $i = 0;
         foreach ($scores as $score) {
             echo "{";
-            echo "\"id\": " . $score->getId().",";
             echo "\"evaluatedScore\": " . $score->getEvaluatedScore().",";
             $date = new DateTime($score->getExam()->getDate());
             echo "\"date\": \"" .$date->format("Y-m-d") ."\",";

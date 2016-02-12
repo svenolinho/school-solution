@@ -15,6 +15,7 @@ class ShowExamsFromSubject extends View {
     
         public function display() {
 
+        $urlExams = URI_PRUEFUNGEN;
         echo "<table class=\"table table-condensed\">";
         echo "<thead>";
         echo "<tr>";
@@ -27,7 +28,7 @@ class ShowExamsFromSubject extends View {
 //            $urlNote = URI_FAECHER . "/notes-" . $student->getFirstName() . "_" . $student->getLastName();
             
             echo "<tr>";
-            echo "<td>{$exam->getDate()}</td>";
+            echo "<td><a href=\"$urlExams/show-{$exam->getId()}?id={$exam->getId()}\">{$exam->getDate()}</a></td>";
 //            echo "<td>";
 //            echo "<a href=\"$urlNote?id=$id\" class=\"btn btn-warning\" {$student->getFirstName()} role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
 //            echo "</td>";

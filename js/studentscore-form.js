@@ -17,10 +17,19 @@ $(document).ready(function () {
         var scoreInput = form.find("input[name=score]");
         var score = scoreInput.val();
         var maxScore = $("[data-max-score]").data("max-score");
+        var hasError = false;
+        var selectedStudent = $("select[name=studentId] option:selected");
         if(score > maxScore){
             var row = scoreInput.closest("div.form-group");
-            row.toggleClass("has-error");
-        }else {
+            row.addClass("has-error");
+            hasError = true;
+        }
+        if(!selectedStudent.length){
+            var row = $("select[name=studentId]").closest("div.form-group");
+            row.addClass("has-error");
+            hasError = true;
+        }
+        if(!hasError) {
             form.submit();
         }
     });

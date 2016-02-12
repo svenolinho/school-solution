@@ -104,9 +104,13 @@ class Exam {
             return 0;
         }
         $sum = 0;
+        $presentCount = 0;
         foreach ($this->studentScores as $score) {
-            $sum += $score->getEvaluatedScore();
+            if ($score->getPresent()) {
+                $sum += $score->getEvaluatedScore();
+                $presentCount++;
+            }
         }
-        return $sum / count($this->studentScores);
+        return $sum / $presentCount;
     }
 }
