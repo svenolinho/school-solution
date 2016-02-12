@@ -17,6 +17,7 @@ class EvaluationRestController extends RestController
         $schoolclassId = filter_input(INPUT_GET, 'schoolclassId', FILTER_DEFAULT);
         $studentId = filter_input(INPUT_GET, 'studentId', FILTER_DEFAULT);
         $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
+        $students = filter_input(INPUT_GET, 'students', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
         if($schoolclassId && $action === "scores"){
             $this->displayScores($schoolclassId);
         } else if($schoolclassId && $action === "scoreAverages"){
@@ -25,6 +26,10 @@ class EvaluationRestController extends RestController
             $this->displayScoreComparison();
         } else if($studentId && $action === "studentScores"){
             $this->displayStudentScores($studentId);
+        } else if($schoolclassId && $action === "getStudents"){
+            $this->displayStudentsOfClass($schoolclassId);
+        } else if($action === "studentComparison" && $students){
+            $this->displayStudentComparison($students);
         } else {
             http_response_code(400);
         }
@@ -145,16 +150,16 @@ class EvaluationRestController extends RestController
         return NULL;
     }
 
-    private function getAverageScore($scoresByClass)
+    private function getAverageScore($scores)
     {
-        if(count($scoresByClass)<1){
+        if(count($scores)<1){
             return 0;
         }
         $sum = 0;
-        foreach ($scoresByClass as $score) {
+        foreach ($scores as $score) {
             $sum += $score->getEvaluatedScore();
         }
-        return $sum / count($scoresByClass);
+        return $sum / count($scores);
     }
 
     private function displayStudentScores($studentId)
@@ -177,5 +182,58 @@ class EvaluationRestController extends RestController
             }
         }
         echo "]";
+    }
+
+    private function displayStudentsOfClass($schoolclassId)
+    {
+        $students = $this->mysqlAdapter->getStudentsFromClass($schoolclassId);
+        $count = count($students);
+        echo "[";
+        $i = 0;
+        foreach ($students as $student) {
+            echo "{";
+            echo "\"id\": " . $student->getId().",";
+            echo "\"name\": \"" .$student->getLastName() . " " . $student->getFirstName() ."\"";
+            if (++$i !== $count) {
+                echo "},";
+            }else{
+                echo "}";
+            }
+        }
+        echo "]";
+    }
+
+    private function displayStudentComparison($students)
+    {
+        $scoresGroupedByStudent = array();
+        foreach ($students as $studentId) {
+            $studentScores = $this->mysqlAdapter->getStudentScores($studentId);
+            if($studentScores) {
+                $scoresGroupedByStudent[] = $studentScores;
+            }
+        }
+        echo "{";
+        echo "\"cols\": [{\"id\": \"student\", \"label\": \"Studenten\", \"type\":\"string\"}";
+        foreach ($scoresGroupedByStudent as $studentScores) {
+            $student = $this->getFirstStudentOfScores($studentScores);
+            echo sprintf(",{\"id\":\"id-%d\", \"label\": \"%s % s\", \"type\":\"number\"}", $student->getId(),$student->getLastName(), $student->getFirstName());
+        }
+        echo "],";
+
+        echo "\"rows\": [";
+        echo "{\"c\":[{\"v\": \"Studenten\"}";
+        foreach ($scoresGroupedByStudent as $studentScores) {
+            $averageScore = $this->getAverageScore($studentScores);
+            echo sprintf(",{\"v\": %f}",$averageScore);
+        }
+        echo "]}]}";
+    }
+
+    private function getFirstStudentOfScores($studentScores)
+    {
+        if(count($studentScores) > 0){
+            return array_shift($studentScores)->getStudent();
+        }
+        return NULL;
     }
 }

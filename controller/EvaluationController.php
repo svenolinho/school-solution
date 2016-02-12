@@ -10,6 +10,7 @@ include_once 'view/auswertung/EvaluationScoreDistributionView.php';
 include_once 'view/auswertung/EvaluationScoreAverageView.php';
 include_once 'view/auswertung/EvaluationScoreComparisonView.php';
 include_once 'view/auswertung/EvaluationStudentScoreView.php';
+include_once 'view/auswertung/EvaluationStudentComparisonView.php';
 
 class EvaluationController extends Controller {
 
@@ -49,6 +50,10 @@ class EvaluationController extends Controller {
             $view = new EvaluationStudentScoreView();
             $view->assign1("studentList",$this->mysqlAdapter->getStudents());
             $view->assign1("subjectList",$this->mysqlAdapter->getSchoolSubjects());
+            $view->display();
+        }else if (preg_match("@/studentComparison@", $_SERVER['REQUEST_URI'])) {
+            $view = new EvaluationStudentComparisonView();
+            $view->assign1("classList",$this->mysqlAdapter->getSchoolclasses());
             $view->display();
         }else {
             $view = new EvaluationView();
