@@ -13,9 +13,9 @@
         </group>
         <group>
             <file>file:/C:/Domains/school-solution/htdocs/controller/SchoolClassController.php</file>
+            <file>file:/C:/Domains/school-solution/htdocs/controller/SchoolSubjectController.php</file>
+            <file>file:/C:/Domains/school-solution/htdocs/view/faecher/ShowSchoolSubjectNotes.php</file>
             <file>file:/C:/Domains/school-solution/htdocs/lib/MySqlAdapter.php</file>
-            <file>file:/C:/Domains/school-solution/htdocs/index.php</file>
-            <file>file:/C:/Domains/school-solution/htdocs/lib/MySqlError.php</file>
         </group>
     </open-files>
 </project-private>

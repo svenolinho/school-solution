@@ -266,6 +266,15 @@ class MySqlAdapter
             echo "Error: <br>" . mysqli_error($this->con);
         }
     }
+    
+    public function editSchoolSubjectNote($id, $note)
+    {
+        $stmt = $this->con->prepare("UPDATE fach SET FACH_notiz = ? WHERE PK_Fachnr=?");
+        $stmt->bind_param("si", $note, $id);
+        if (!$stmt->execute()) {
+            echo "Error: <br>" . mysqli_error($this->con);
+        }
+    }
 
     public function addSchoolSubject($subjectName)
     {
@@ -300,6 +309,7 @@ class MySqlAdapter
 
     public function getSchoolSubjects()
     {
+        include_once 'model/SchoolSubject.php';
         $schoolSubjects = array();
         $res = $this->con->query("SELECT * FROM fach ORDER BY FACH_name");
         while ($row = $res->fetch_assoc()) {
@@ -308,6 +318,17 @@ class MySqlAdapter
         }
         $res->free();
         return $schoolSubjects;
+    }
+    
+    public function getSchoolSubject($id){
+        
+        include_once 'model/SchoolSubject.php';
+        $res = $this->con->query("SELECT * FROM fach WHERE PK_Fachnr = $id");
+        if (($row = $res->fetch_assoc())) {
+            $schoolSubject = new SchoolSubject($row['PK_Fachnr'], $row['FACH_name'], $row['FACH_notiz']);
+        }
+        $res->free();
+        return $schoolSubject;
     }
 
     public function addExam($subject, $schoolClass, $clef, $date, $maxScore)

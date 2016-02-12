@@ -6,6 +6,7 @@ include_once 'lib/MySqlAdapter.php';
 include_once 'view/View.php';
 include_once 'view/faecher/SchoolSubjectView.php';
 include_once 'view/faecher/ShowExamsFromSubject.php';
+include_once 'view/faecher/ShowSchoolSubjectNotes.php';
 
 class SchoolSubjectController extends Controller {
 
@@ -33,6 +34,11 @@ class SchoolSubjectController extends Controller {
     protected function edit() {
         $id = filter_input(INPUT_POST, 'schoolsubject-id', FILTER_VALIDATE_INT);
         $subjectName = filter_input(INPUT_POST, 'schoolsubject', FILTER_DEFAULT);
+        if (preg_match("@^.*/edit-note@", $_SERVER['REQUEST_URI'])) {
+            $note = filter_input(INPUT_POST, 'note', FILTER_DEFAULT);
+            $this->mysqlAdapter->editSchoolsubjectNote($id, $note);
+        } 
+        
         if(!$id || !$subjectName){
             throw new Exception('manipulation');
         }
@@ -61,6 +67,11 @@ class SchoolSubjectController extends Controller {
 
     protected function showNotes() {
         
+        $id = $_GET['id'];
+        $notes = $this->mysqlAdapter->getSchoolSubject($id);
+        $view = new ShowSchoolSubjectNotes();
+        $view->assign1('notes', $notes);
+        $view->display();
     }
 
 //put your code here

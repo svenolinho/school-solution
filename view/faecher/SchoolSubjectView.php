@@ -19,6 +19,7 @@ class SchoolSubjectView extends View {
             $id = $subject->getId();
             $urlClass = URI_FAECHER . "/show-" . $subject->getSubjectName();
             $urlDelete = URI_FAECHER . "/delete-" . $subject->getSubjectName();
+            $urlNote = URI_FAECHER . "/notes-" . $subject->getSubjectName();
 
             echo "<tr data-toggle=\"schoolsubject-row\" data-schoolsubject-id=\"$id\">";
             echo "<td data-id=\"schoolsubject\"><a href=\"$urlClass?id=$id\" class=\"list-group-item\">{$subject->getSubjectName()}</a></td>";
@@ -27,6 +28,9 @@ class SchoolSubjectView extends View {
             echo "</td>";
             echo "<td>";
             echo "<a class=\"btn btn-primary\" role=\"button\" data-toggle=\"schoolsubject-start-edit\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Bearbeiten\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
+            echo "</td>";
+            echo "<td>";
+            echo "<a href=\"$urlNote?id=$id\" class=\"btn btn-warning\" {$subject->getSubjectName()} role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
             echo "</td>";
             echo "</tr>";
         }
