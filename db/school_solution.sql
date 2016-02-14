@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 31, 2016 at 01:37 AM
+-- Generation Time: Feb 14, 2016 at 04:23 AM
 -- Server version: 5.6.28-0ubuntu0.15.10.1
 -- PHP Version: 5.6.11-1ubuntu3.1
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `school_solution`
 --
+CREATE DATABASE IF NOT EXISTS `school_solution` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `school_solution`;
 
 -- --------------------------------------------------------
 
@@ -29,7 +31,8 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `fach`;
 CREATE TABLE IF NOT EXISTS `fach` (
   `PK_Fachnr` int(11) NOT NULL,
-  `FACH_name` varchar(50) NOT NULL
+  `FACH_name` varchar(50) NOT NULL,
+  `FACH_notiz` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

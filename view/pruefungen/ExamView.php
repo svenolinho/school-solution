@@ -12,7 +12,6 @@ class ExamView extends View {
         echo "<div class=\"panel panel-default\">";
         echo "<div class=\"panel-heading\">";
         echo "<h4>Pr&uuml;fungen<a data-toggle=\"modal\" data-target=\"#newExam\" class=\"btn\"><span class=\"glyphicon glyphicon-plus\"></span></a>";
-        echo "<a href=\"#\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-arrow-down\"></span> Klasse wählen</a></h5>";
         echo "</div>";
         echo "<table class=\"table table-condensed\" data-toggle=\"schoolexam-table\">";
         echo <<<THEAD

@@ -27,10 +27,14 @@ class ScoreView extends View
         $roundedAverage = round($this->vars['exam']->getAverageEvaluatedScore(),2);
         echo <<<OVERVIEW
         <a href="$url" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Zurück</a>
-        <h3>{$this->vars['exam']->getSubjectName()} Pr&uuml;fung vom {$date->format("d.m.Y")}</h3>
+        <h3>{$this->vars['exam']->getSchoolClassName()} {$this->vars['exam']->getSubjectName()} Pr&uuml;fung vom {$date->format("d.m.Y")}</h3>
         <div class="row">
             <div class="col-md-2">Datum</div>
             <div class="col-md-10">{$date->format("d.m.Y")}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">Klasse</div>
+            <div class="col-md-10">{$this->vars['exam']->getSchoolClassName()}</div>
         </div>
         <div class="row">
             <div class="col-md-2">Fach</div>
@@ -127,10 +131,9 @@ NEWSCORE;
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label" for="studentId">Schüler</label>
-                            <select class="form-control" name="studentId" id="studentId">
-                                $studentsOptionHtml
-                            </select>
+                            <label class="control-label" for="student">Schüler</label>
+                            <p name="student" id="student"></p>
+                            <input type="hidden" name="studentId"/>
                         </div>
                         <div class="checkbox">
                             <label>

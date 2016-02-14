@@ -19,7 +19,7 @@ class ShowExamsFromSubject extends View {
         echo "<table class=\"table table-condensed\">";
         echo "<thead>";
         echo "<tr>";
-        echo "<th>Prüfungsdatum</th>";
+        echo "<th>Prüfungsdatum {$this->vars['schoolSubject']->getSubjectName()}</th>";
         echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
@@ -28,7 +28,7 @@ class ShowExamsFromSubject extends View {
 //            $urlNote = URI_FAECHER . "/notes-" . $student->getFirstName() . "_" . $student->getLastName();
             
             echo "<tr>";
-            echo "<td><a href=\"$urlExams/show-{$exam->getId()}?id={$exam->getId()}\">{$exam->getDate()}</a></td>";
+            echo "<td><a href=\"$urlExams/show-{$exam->getId()}?id={$exam->getId()}\">{$exam->getDate()} {$exam->getSchoolClassName()}</a></td>";
 //            echo "<td>";
 //            echo "<a href=\"$urlNote?id=$id\" class=\"btn btn-warning\" {$student->getFirstName()} role=\"button\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Notizen\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>";
 //            echo "</td>";

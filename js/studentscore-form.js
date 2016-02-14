@@ -4,9 +4,12 @@ $(document).ready(function () {
         var valuesTr = $(this).parent().parent();
         var scoreId = valuesTr.data("studentscore-id");
         var studentId = valuesTr.children("td[data-id=student]").data("value");
+        var student = valuesTr.children("td[data-id=student]").text();
         var present = valuesTr.children("td[data-id=present]").data("value");
         var score = valuesTr.children("td[data-id=score]").text();
         $("#editScore select[name=studentId] option[value="+studentId+"]").prop('selected', true);
+        $('#student').text(student);
+        $('input[name=studentId]').val(studentId);
         $("#editScore input[name=scoreId]").val(scoreId);
         $("#editScore input[name=present]").prop('checked', present);
         $("#editScore input[name=score]").val(score);

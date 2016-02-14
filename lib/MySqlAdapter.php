@@ -185,10 +185,12 @@ class MySqlAdapter
     public function getExamsFromSubjects($id)
     {
         include_once 'model/Exam.php';
+        include_once 'model/SchoolClass.php';
         $examlist = array();
-        $res = $this->con->query("SELECT * FROM pruefungen WHERE PRUEF_fach =$id");
+        $res = $this->con->query("SELECT * FROM pruefungen LEFT JOIN klasse ON PRUEF_klasse = klasse.PK_Klassenr WHERE PRUEF_fach =$id");
         while ($row = $res->fetch_assoc()) {
-            $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $row['PRUEF_klasse'], $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
+            $class = new SchoolClass($row['PK_Klassenr'], $row['KLA_name'], $row['KLA_notiz']);
+            $exam = new Exam($row['PK_Pruefnr'], $row['PRUEF_fach'], $class, $row['PRUEF_notenschluessel'], $row['PRUEF_datum'], $row['PRUEF_maxpunktzahl']);
             $examlist[] = $exam;
         }
         $res->free();

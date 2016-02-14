@@ -59,9 +59,11 @@ class SchoolSubjectController extends Controller {
 
     protected function show() {
         $id = $_GET['id'];
+        $schoolSubject = $this->mysqlAdapter->getSchoolSubject($id);
         $examlist = $this->mysqlAdapter->getExamsFromSubjects($id);
         $view = new ShowExamsFromSubject();
         $view->assign1('list', $examlist);
+        $view->assign1('schoolSubject', $schoolSubject);
         $view->display();
     }
 
